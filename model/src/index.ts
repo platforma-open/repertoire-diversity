@@ -61,9 +61,21 @@ export const model = BlockModel.create<BlockArgs, UiState>()
     return createPlDataTable(ctx, pCols, ctx.uiState?.tableState);
   })
 
+  .output('pf', (ctx) => {
+    const pCols = ctx.outputs?.resolve('pf')?.getPColumns();
+    if (pCols === undefined) {
+      return undefined;
+    }
+
+    return ctx.createPFrame(pCols);
+  })
+
   .output('message', (ctx) => ctx.outputs?.resolve('message')?.getDataAsJson())
 
-  .sections([{ type: 'link', href: '/', label: 'Main' }])
+  .sections([
+    { type: 'link', href: '/', label: 'Main' },
+    { type: 'link', href: '/graph', label: 'Graph' }
+  ])
 
   .done();
 

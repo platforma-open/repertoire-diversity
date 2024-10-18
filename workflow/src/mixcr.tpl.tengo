@@ -23,7 +23,8 @@ self.body(func(args) {
 		arg("postanalysis").
 		arg("individual").
 		arg("--default-downsampling").arg(args.downsampling).
-		arg("--default-weight-function").arg(args.weight)
+		arg("--default-weight-function").arg(args.weight).
+		secret("MI_LICENSE", "MI_LICENSE")
 	
 	if args.dropOutliers == true {
 		cmdBuilder = cmdBuilder.arg("--drop-outliers")
@@ -45,7 +46,7 @@ self.body(func(args) {
 	cmdBuilder = cmdBuilder.saveFileSet("diversityTsv", "^r\\.diversity\\..*\\.tsv$")
 
 	cmdBuilder = cmdBuilder.cache(48 * times.hour);
-	
+
 	run := cmdBuilder.run()
 
 	return {

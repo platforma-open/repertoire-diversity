@@ -13,6 +13,7 @@ catalog:
 
   "@platforma-sdk/test": ^1.5.43
   '@milaboratory/mixcr': 4.7.0-108-develop
+  '@milaboratories/graph-maker': 1.0.12
   '@milaboratories/software-pframes-conv': ^1.5.10
   '@milaboratories/software-small-binaries': ^1.11.0
   
