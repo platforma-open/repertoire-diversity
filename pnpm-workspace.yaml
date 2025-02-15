@@ -15,6 +15,7 @@ catalog:
   '@milaboratories/software-pframes-conv': ^2.1.8
   '@platforma-open/milaboratories.software-small-binaries': ^1.15.7
   '@platforma-open/milaboratories.software-mixcr': 4.7.0-137-develop
+  '@platforma-open/milaboratories.software-ptransform': ^1.2.0
 
   '@platforma-sdk/test': ^1.22.22
 

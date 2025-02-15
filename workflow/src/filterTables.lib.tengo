@@ -1,0 +1,36 @@
+ll := import("@platforma-sdk/workflow-tengo:ll")
+exec := import("@platforma-sdk/workflow-tengo:exec")
+assets := import("@platforma-sdk/workflow-tengo:assets")
+json := import("json")
+paggregateSw := assets.importSoftware("@platforma-open/milaboratories.software-ptransform:main")
+
+//// aggregating by-nodes output to make it uniquely addressable by it's native key
+filterOutliers := func(inputTsv) {
+    filterWorkflow := { steps: [
+        {
+            type: "filter",
+            predicate: {
+                type: "gt",
+                value: 0,
+                column: "Observed diversity"
+                }
+            }
+        ]
+    }
+
+
+    filterCmd := exec.builder().
+        printErrStreamToStdout().
+        software(paggregateSw).
+        arg("--workflow").arg("wf.json").
+        writeFile("wf.json", json.encode(filterWorkflow)).
+        arg("input.tsv").addFile("input.tsv", inputTsv).
+        arg("output.tsv").saveFile("output.tsv").
+        run()
+
+    return filterCmd.getFile("output.tsv")
+}
+
+export ll.toStrict({
+	filterOutliers: filterOutliers
+})

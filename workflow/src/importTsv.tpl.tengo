@@ -10,6 +10,8 @@ json := import("json")
 
 self.defineOutputs("pf")
 
+filterTables := import(":filterTables")
+
 tsvImportParams := {
 	"axes": [
 		{
@@ -58,8 +60,9 @@ self.body(func(args) {
 
 	tsvMap := pColumn.resourceMapBuilder(/* key length*/ 1 )
 	for fileName, file in args.tsv {
+		filteredFile := filterTables.filterOutliers(file)
 		chain := fileName[FILE_NAME_PREFIX_LEN:(len(fileName) - FILE_NAME_SUFFIX_LEN)]
-		tsvMap.add([chain], file)
+		tsvMap.add([chain], filteredFile)
 	}
 	tsvMap = tsvMap.build()
 
