@@ -10,7 +10,7 @@ pSpec := import("@platforma-sdk/workflow-tengo:pframes.spec")
 maps := import("@platforma-sdk/workflow-tengo:maps")
 json := import("json")
 
-diversitySw := assets.importSoftware("@platforma-open/milaboratories.repertoire-diversity.software:main")
+diversitySw := assets.importSoftware("@platforma-open/milaboratories.repertoire-diversity-2.software:main")
 
 getLabel := func(mt) {
 	if mt == "chao1" {

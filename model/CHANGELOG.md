@@ -1,4 +1,4 @@
-# @platforma-open/milaboratories.repertoire-diversity.model
+# @platforma-open/milaboratories.repertoire-diversity-2.model
 
 ## 1.1.1
 
