@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.software
 
+## 1.1.2
+
+### Patch Changes
+
+- 6dba4b4: Fix package name
+
 ## 1.1.1
 
 ### Patch Changes

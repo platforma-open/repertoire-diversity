@@ -1,5 +1,13 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.1.2
+
+### Patch Changes
+
+- 6dba4b4: Fix package name
+- Updated dependencies [6dba4b4]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.1.2
+
 ## 1.1.1
 
 ### Patch Changes
