@@ -1,5 +1,13 @@
 # @platforma-open/milaboratories.repertoire-diversity.workflow
 
+## 1.1.1
+
+### Patch Changes
+
+- 1417619: Init
+- Updated dependencies [1417619]
+  - @platforma-open/milaboratories.repertoire-diversity.software@1.1.1
+
 ## 1.1.0
 
 ### Minor Changes

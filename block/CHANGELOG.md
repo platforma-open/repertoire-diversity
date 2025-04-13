@@ -1,5 +1,15 @@
 # @platforma-open/milaboratories.repertoire-diversity
 
+## 2.0.2
+
+### Patch Changes
+
+- 1417619: Init
+- Updated dependencies [1417619]
+  - @platforma-open/milaboratories.repertoire-diversity.model@1.1.1
+  - @platforma-open/milaboratories.repertoire-diversity.ui@1.1.1
+  - @platforma-open/milaboratories.repertoire-diversity.workflow@1.1.1
+
 ## 2.0.1
 
 ### Patch Changes
