@@ -1,5 +1,5 @@
 {
-  "name": "@platforma-open/milaboratories.repertoire-diversity",
+  "name": "@platforma-open/milaboratories.repertoire-diversity-2",
   "version": "2.0.2",
   "scripts": {
     "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,vue}\"",
@@ -13,15 +13,15 @@
     "index.js"
   ],
   "dependencies": {
-    "@platforma-open/milaboratories.repertoire-diversity.workflow": "workspace:*",
-    "@platforma-open/milaboratories.repertoire-diversity.model": "workspace:*",
-    "@platforma-open/milaboratories.repertoire-diversity.ui": "workspace:*"
+    "@platforma-open/milaboratories.repertoire-diversity-2.workflow": "workspace:*",
+    "@platforma-open/milaboratories.repertoire-diversity-2.model": "workspace:*",
+    "@platforma-open/milaboratories.repertoire-diversity-2.ui": "workspace:*"
   },
   "block": {
     "components": {
-      "workflow": "@platforma-open/milaboratories.repertoire-diversity.workflow/dist/tengo/tpl/main.plj.gz",
-      "model": "@platforma-open/milaboratories.repertoire-diversity.model/dist/model.json",
-      "ui": "@platforma-open/milaboratories.repertoire-diversity.ui/dist"
+      "workflow": "@platforma-open/milaboratories.repertoire-diversity-2.workflow/dist/tengo/tpl/main.plj.gz",
+      "model": "@platforma-open/milaboratories.repertoire-diversity-2.model/dist/model.json",
+      "ui": "@platforma-open/milaboratories.repertoire-diversity-2.ui/dist"
     },
     "meta": {
       "title": "Repertoire Diversity Analysis - 2",

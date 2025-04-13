@@ -1,4 +1,4 @@
-# @platforma-open/milaboratories.repertoire-diversity.software
+# @platforma-open/milaboratories.repertoire-diversity-2.software
 
 ## 1.1.1
 

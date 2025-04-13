@@ -1,4 +1,4 @@
-import { model } from '@platforma-open/milaboratories.repertoire-diversity.model';
+import { model } from '@platforma-open/milaboratories.repertoire-diversity-2.model';
 import { defineApp } from '@platforma-sdk/ui-vue';
 import DiversityGraph from './pages/DiversityGraph.vue';
 import MainPage from './pages/MainPage.vue';
