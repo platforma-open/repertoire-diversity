@@ -1,0 +1,134 @@
+// "hello world"
+wf := import("@platforma-sdk/workflow-tengo:workflow")
+exec := import("@platforma-sdk/workflow-tengo:exec")
+assets:= import("@platforma-sdk/workflow-tengo:assets")
+xsv := import("@platforma-sdk/workflow-tengo:pframes.xsv")
+ll := import("@platforma-sdk/workflow-tengo:ll")
+pframes := import("@platforma-sdk/workflow-tengo:pframes")
+canonical := import("@platforma-sdk/workflow-tengo:canonical")
+pSpec := import("@platforma-sdk/workflow-tengo:pframes.spec")
+maps := import("@platforma-sdk/workflow-tengo:maps")
+json := import("json")
+
+diversitySw := assets.importSoftware("@platforma-open/milaboratories.repertoire-diversity.software:main")
+
+getLabel := func(mt) {
+	if mt == "chao1" {
+		return "Chao1 Estimate"
+	} else if mt == "d50" {
+		return "D50 Diversity"
+	} else if mt == "efronThisted" {
+		return "Efron-Thisted Estimate"
+	} else if mt == "observed" {
+		return "Observed Diversity"
+	} else if mt == "shannonWienerIndex" {
+		return "Shannon-Wiener Index"
+	} else if mt == "shannonWiener" {
+		return "Shannon-Wiener Diversity"
+	} else if mt == "normalizedShannonWiener" {
+		return "Normalized Shannon-Wiener Index"
+	} else if mt == "inverseSimpson" {
+		return "Inverse Simpson Index"
+	} else if mt == "gini" {
+		return "Gini Index"
+	}
+	return mt;
+}
+
+getSpecs := func(abundanceSpec, metrics) {
+	columns := []
+
+	for index, metric in metrics {
+		spec := {
+			column: "d-" + string(index),
+			spec: {
+					name: "pl7.app/diversity",
+					valueType: "Double",
+					domain: maps.merge(
+						abundanceSpec.domain,
+						{
+							"pl7.app/diversity/type": metric.type,
+							"pl7.app/downsampling": canonical.encode(metric.downsampling)
+						}
+					),
+					annotations: {
+						"pl7.app/label": getLabel(metric.type)
+					}
+				}
+		}
+		columns = append(columns, spec)
+	}
+
+	return {
+		axes: [
+			{
+				column: "sampleId",
+				spec: abundanceSpec.axesSpec[0]
+			}
+		], 
+		columns: columns,
+		storageFormat: "Binary",
+		partitionKeyLength: 0
+	}
+}
+
+wf.prepare(func(args) {
+	bundleBuilder := wf.createPBundleBuilder()
+	bundleBuilder.addAnchor("main", args.abundanceRef)
+	return  { 
+		columns: bundleBuilder.build()
+	}
+})
+
+wf.body(func(args) {
+	blockId := wf.blockId().getDataAsJson()
+
+	columns := args.columns
+	abundanceSpec := columns.getSpec(args.abundanceRef)
+	table := columns.xsvTableBuilder()
+
+	table.setAxisHeader("pl7.app/sampleId", "sampleId")
+	table.add(args.abundanceRef, {header: "count"})
+	tsv := table.build("tsv")
+
+	runDiversity := exec.builder().
+		software(diversitySw).
+		writeFile("metrics.json", json.encode(args.metrics)).
+		addFile("input.tsv", tsv).
+		saveFile("result.tsv").
+		run()
+
+	result := xsv.importFile(
+		runDiversity.getFile("result.tsv"),
+		"tsv",
+		getSpecs(abundanceSpec, args.metrics),
+		{ splitDataAndSpec: true }
+	)
+
+	trace := pSpec.makeTrace(
+		abundanceSpec,
+		{
+			type: "milaboratories.differential-repertoire-diversity",
+			id: blockId,
+			importance: 30, 
+			label: "Repertoire Diversity"
+		}
+	)
+
+	pf := pframes.pFrameBuilder()
+	for id, v in result {
+		pf.add(id, trace.inject(v.spec), v.data)
+	}
+	pf = pf.build()
+
+	return {
+		outputs: {
+			pf: pframes.exportFrame(pf)
+		},
+
+		exports: {
+			pf: pf
+		}
+	}
+})
+
