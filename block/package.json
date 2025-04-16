@@ -24,7 +24,7 @@
       "ui": "@platforma-open/milaboratories.repertoire-diversity-2.ui/dist"
     },
     "meta": {
-      "title": "Repertoire Diversity Analysis - 2",
+      "title": "Repertoire Diversity Analysis",
       "logo": "file:../logos/block-logo.png",
       "url": "https://github.com/platforma-open/repertoire-diversity",
       "docs": "https://github.com/platforma-open/repertoire-diversity",
