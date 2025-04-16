@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2
 
+## 2.0.5
+
+### Patch Changes
+
+- 965efa9: Updated block metadata
+
 ## 2.0.4
 
 ### Patch Changes
