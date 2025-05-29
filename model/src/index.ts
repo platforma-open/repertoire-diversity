@@ -1,6 +1,6 @@
 import type { GraphMakerState } from '@milaboratories/graph-maker';
 import type { InferOutputsType, PColumnSpec, PlDataTableState, PlRef } from '@platforma-sdk/model';
-import { BlockModel, createPFrameForGraphs, createPlDataTable, isPColumnSpec } from '@platforma-sdk/model';
+import { BlockModel, createPFrameForGraphs, createPlDataTable } from '@platforma-sdk/model';
 
 export type DiversityType = 'chao1' | 'd50' | 'efronThisted' |
   'observed' | 'shannonWienerIndex' | 'shannonWiener' |
@@ -92,11 +92,19 @@ export const model = BlockModel.create()
   .argsValid((ctx) => ctx.args.abundanceRef !== undefined)
 
   .output('abundanceOptions', (ctx) =>
-    ctx.resultPool.getOptions((c) =>
-      isPColumnSpec(c) && isNumericType(c)
-      && c.annotations?.['pl7.app/isAbundance'] === 'true'
-      && c.annotations?.['pl7.app/abundance/normalized'] === 'false',
-    ))
+    ctx.resultPool.getOptions([{
+      axes: [
+        { name: 'pl7.app/sampleId' },
+        { },
+      ],
+      annotations: {
+        'pl7.app/isAbundance': 'true',
+        'pl7.app/abundance/normalized': 'false',
+        'pl7.app/abundance/isPrimary': 'true',
+      },
+    },
+    ]),
+  )
 
   .output('pt', (ctx) => {
     const pCols = ctx.outputs?.resolve('pf')?.getPColumns();

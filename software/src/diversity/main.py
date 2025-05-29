@@ -61,7 +61,7 @@ def downsample(df, downsampling):
 
     elif downsampling['type'] == "hypergeometric":
         if downsampling['valueChooser'] == "min":
-            value = totals['sum'].min()
+            value = totals['count'].min()
         elif downsampling['valueChooser'] == "fixed":
             value = downsampling['n']
         elif downsampling['valueChooser'] == "auto":
