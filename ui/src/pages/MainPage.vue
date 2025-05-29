@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { PlRef } from '@platforma-sdk/model';
-import { plRefsEqual } from '@platforma-sdk/model';
 import type { PlDataTableSettings } from '@platforma-sdk/ui-vue';
 import { PlAgDataTable, PlAgDataTableToolsPanel, PlBlockPage, PlBtnGhost, PlEditableTitle, PlMaskIcon24 } from '@platforma-sdk/ui-vue';
 import { computed, ref } from 'vue';
