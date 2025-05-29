@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.software
 
+## 1.2.0
+
+### Minor Changes
+
+- 84296a7: Fix random min bug
+
 ## 1.1.2
 
 ### Patch Changes

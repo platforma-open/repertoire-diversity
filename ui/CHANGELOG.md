@@ -1,5 +1,16 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.2.0
+
+### Minor Changes
+
+- 84296a7: Fix random min bug
+
+### Patch Changes
+
+- Updated dependencies [84296a7]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.2.0
+
 ## 1.1.2
 
 ### Patch Changes
