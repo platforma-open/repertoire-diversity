@@ -64,7 +64,8 @@ const props = defineModel<Metric>({ default: {
     />
 
     <PlNumberField
-      v-if="props.downsampling.valueChooser === 'fixed'"
+      v-if="props.downsampling.valueChooser === 'fixed'
+        && props.downsampling.type === 'hypergeometric'"
       v-model="props.downsampling.n"
       label="Select N"
       :minValue="0"
