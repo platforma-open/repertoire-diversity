@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.2.1
+
+### Patch Changes
+
+- 6dff400: Add a new condition to make dissapear an option button when it should
+
 ## 1.2.0
 
 ### Minor Changes
