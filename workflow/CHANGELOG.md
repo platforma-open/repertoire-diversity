@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.workflow
 
+## 1.2.0
+
+### Minor Changes
+
+- 0888e31: chore: update deps
+
 ## 1.1.3
 
 ### Patch Changes
