@@ -86,11 +86,11 @@ wf.body(func(args) {
 
 	columns := args.columns
 	abundanceSpec := columns.getSpec(args.abundanceRef)
-	table := columns.xsvTableBuilder()
+	table := pframes.tsvFileBuilder()
 
 	table.setAxisHeader("pl7.app/sampleId", "sampleId")
-	table.add(args.abundanceRef, {header: "count"})
-	tsv := table.build("tsv")
+	table.add(columns.getColumn(args.abundanceRef), {header: "count"})
+	tsv := table.build()
 
 	runDiversity := exec.builder().
 		software(diversitySw).
