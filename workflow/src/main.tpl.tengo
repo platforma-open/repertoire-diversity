@@ -52,7 +52,8 @@ getSpecs := func(abundanceSpec, metrics) {
 						}
 					),
 					annotations: {
-						"pl7.app/label": getLabel(metric.type)
+						"pl7.app/label": getLabel(metric.type),
+						"pl7.app/format": ".2f"
 					}
 				}
 		}
