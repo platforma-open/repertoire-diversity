@@ -1,5 +1,12 @@
 # @platforma-open/milaboratories.repertoire-diversity-2
 
+## 2.0.9
+
+### Patch Changes
+
+- Updated dependencies [7bc102b]
+  - @platforma-open/milaboratories.repertoire-diversity-2.workflow@1.3.0
+
 ## 2.0.8
 
 ### Patch Changes

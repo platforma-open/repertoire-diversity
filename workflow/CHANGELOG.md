@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.workflow
 
+## 1.3.0
+
+### Minor Changes
+
+- 7bc102b: Add annotation for number formatting and migrate xsvTableBuilder
+
 ## 1.2.0
 
 ### Minor Changes
