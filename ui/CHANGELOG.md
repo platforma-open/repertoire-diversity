@@ -1,5 +1,16 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.3.0
+
+### Minor Changes
+
+- c16a9dc: Update dependencies and defaults style
+
+### Patch Changes
+
+- Updated dependencies [c16a9dc]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.3.0
+
 ## 1.2.1
 
 ### Patch Changes
