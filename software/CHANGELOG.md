@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.software
 
+## 1.3.0
+
+### Minor Changes
+
+- 2206a21: Fix posible float error
+
 ## 1.2.0
 
 ### Minor Changes
