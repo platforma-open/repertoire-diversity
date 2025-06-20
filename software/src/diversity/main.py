@@ -73,7 +73,7 @@ def downsample(df, downsampling):
         rng = default_rng(31415)  # always fix seed for reproducibility
 
         df["count"] = rng.multivariate_hypergeometric(
-            df["count"].astype(np.int64), value)
+            df["count"].astype(np.int64), int(value))
 
         df = df.loc[df["count"] != 0]
         return df
