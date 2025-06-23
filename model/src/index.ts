@@ -1,5 +1,5 @@
 import type { GraphMakerState } from '@milaboratories/graph-maker';
-import type { InferOutputsType, PColumnSpec, PlDataTableState, PlRef } from '@platforma-sdk/model';
+import type { InferOutputsType, PColumnIdAndSpec, PlDataTableState, PlRef } from '@platforma-sdk/model';
 import { BlockModel, createPFrameForGraphs, createPlDataTable } from '@platforma-sdk/model';
 
 export type DiversityType = 'chao1' | 'd50' | 'efronThisted' |
@@ -25,10 +25,6 @@ export type UiState = {
   tableState?: PlDataTableState;
   graphState: GraphMakerState;
 };
-
-function isNumericType(c: PColumnSpec): boolean {
-  return c.valueType === 'Double' || c.valueType === 'Int' || c.valueType === 'Float' || c.valueType === 'Long';
-}
 
 export const model = BlockModel.create()
 
@@ -122,6 +118,23 @@ export const model = BlockModel.create()
     }
 
     return createPFrameForGraphs(ctx, pCols);
+  })
+
+  // Return a list of Pcols for plot defaults
+  .output('pcols', (ctx) => {
+    const pCols = ctx.outputs?.resolve('pf')?.getPColumns();
+
+    if (pCols === undefined || pCols.length === 0) {
+      return undefined;
+    }
+
+    return pCols.map(
+      (c) =>
+        ({
+          columnId: c.id,
+          spec: c.spec,
+        } satisfies PColumnIdAndSpec),
+    );
   })
 
   .output('isRunning', (ctx) => ctx.outputs?.getIsReadyOrError() === false)
