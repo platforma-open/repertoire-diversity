@@ -90,10 +90,14 @@ wf.body(func(args) {
 
 	table.setAxisHeader("pl7.app/sampleId", "sampleId")
 	table.add(columns.getColumn(args.abundanceRef), {header: "count"})
+	table.mem("16GiB")
+	table.cpu(1)
 	tsv := table.build()
 
 	runDiversity := exec.builder().
 		software(diversitySw).
+		mem("16GiB").
+		cpu(1).
 		writeFile("metrics.json", json.encode(args.metrics)).
 		addFile("input.tsv", tsv).
 		saveFile("result.tsv").
@@ -103,7 +107,7 @@ wf.body(func(args) {
 		runDiversity.getFile("result.tsv"),
 		"tsv",
 		getSpecs(abundanceSpec, args.metrics),
-		{ splitDataAndSpec: true }
+		{ splitDataAndSpec: true, cpu: 1, mem: "32GiB" }
 	)
 
 	trace := pSpec.makeTrace(
