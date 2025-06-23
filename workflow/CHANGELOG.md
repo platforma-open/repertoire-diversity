@@ -1,5 +1,12 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.workflow
 
+## 1.4.0
+
+### Minor Changes
+
+- 60f2dc1: Support batch system
+- 1b4bc1d: Support batch system
+
 ## 1.3.1
 
 ### Patch Changes
