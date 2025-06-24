@@ -1,5 +1,13 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.workflow
 
+## 1.4.1
+
+### Patch Changes
+
+- f95c059: Update SDK
+- Updated dependencies [f95c059]
+  - @platforma-open/milaboratories.repertoire-diversity-2.software@1.3.1
+
 ## 1.4.0
 
 ### Minor Changes
