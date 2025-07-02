@@ -29,7 +29,6 @@ export type UiState = {
 };
 
 export const model = BlockModel.create()
-
   .withArgs<BlockArgs>({
     metrics: [
       {
@@ -114,7 +113,7 @@ export const model = BlockModel.create()
       return undefined;
     }
 
-    return createPlDataTableV2(ctx, pCols, ctx.uiState?.tableState);
+    return createPlDataTableV2(ctx, pCols, ctx.uiState.tableState);
   })
 
   .output('pf', (ctx) => {

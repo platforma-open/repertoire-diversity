@@ -5,8 +5,10 @@ import { PlBtnSecondary, PlDropdownRef, PlElementList, PlSlideModal } from '@pla
 import { useApp } from '../app';
 import DiversityCard from './DiversityCard.vue';
 import { getMetricLabel } from './util';
+import { useMetrics } from './metrics';
 
 const app = useApp();
+const { metrics, addMetric } = useMetrics();
 
 function setAbundanceRef(abundanceRef?: PlRef) {
   app.model.args.abundanceRef = abundanceRef;
