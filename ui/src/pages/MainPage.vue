@@ -1,16 +1,14 @@
 <script setup lang="ts">
-import type { PlDataTableSettings } from '@platforma-sdk/ui-vue';
-import { PlAgDataTable, PlAgDataTableToolsPanel, PlBlockPage, PlBtnGhost, PlEditableTitle, PlMaskIcon24 } from '@platforma-sdk/ui-vue';
-import { computed, ref } from 'vue';
+import { PlAgDataTableToolsPanel, PlAgDataTableV2, PlBlockPage, PlBtnGhost, PlEditableTitle, PlMaskIcon24, usePlDataTableSettingsV2 } from '@platforma-sdk/ui-vue';
+import { ref } from 'vue';
 import { useApp } from '../app';
 import SettingsModal from './SettingsModal.vue';
 
 const app = useApp();
 
-const tableSettings = computed<PlDataTableSettings>(() => ({
-  sourceType: 'ptable',
-  pTable: app.model.outputs.pt,
-}));
+const tableSettings = usePlDataTableSettingsV2({
+  model: () => app.model.outputs.pt,
+});
 
 const settingsAreShown = ref(app.model.outputs.pt === undefined);
 const showSettings = () => {
@@ -34,7 +32,7 @@ const showSettings = () => {
         </template>
       </PlBtnGhost>
     </template>
-    <PlAgDataTable v-model="app.model.ui.tableState" :settings="tableSettings" show-columns-panel show-export-button />
+    <PlAgDataTableV2 v-model="app.model.ui.tableState" :settings="tableSettings" show-columns-panel show-export-button />
   </PlBlockPage>
 
   <SettingsModal v-model="settingsAreShown" />
