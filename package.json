@@ -23,14 +23,6 @@
     "js-yaml": "catalog:"
   },
   "packageManager": "pnpm@9.12.0",
-  "pnpm": {
-    "overrides": {
-      "@platforma-sdk/model": "file:/Users/aleksandr/Projects/MILAB/platform-1/sdk/model/package.tgz",
-      "@platforma-sdk/ui-vue": "file:/Users/aleksandr/Projects/MILAB/platform-1/sdk/ui-vue/package.tgz",
-      "@milaboratories/uikit": "file:/Users/aleksandr/Projects/MILAB/platform-1/lib/ui/uikit/package.tgz",
-      "@milaboratories/helpers": "file:/Users/aleksandr/Projects/MILAB/platform-1/lib/util/helpers/package.tgz"
-    }
-  },
   "//pnpm": {
     "overrides": {
       "@milaboratories/pl-model-common": "file:/Users/poslavskysv/Projects/milab/platforma/platforma-sdk/lib/model/common/package.tgz",
@@ -38,6 +30,14 @@
       "@platforma-sdk/ui-vue": "file:/Users/poslavskysv/Projects/milab/platforma/platforma-sdk/sdk/ui-vue/package.tgz",
       "@platforma-sdk/workflow-tengo": "file:/Users/poslavskysv/Projects/milab/platforma/platforma-sdk/sdk/workflow-tengo/package.tgz",
       "@milaboratories/uikit": "file:/Users/poslavskysv/Projects/milab/platforma/platforma-sdk/lib/ui/uikit/package.tgz"
+    }
+  },
+  "///pnpm": {
+    "overrides": {
+      "@platforma-sdk/model": "file:/Users/aleksandr/Projects/MILAB/platform-1/sdk/model/package.tgz",
+      "@platforma-sdk/ui-vue": "file:/Users/aleksandr/Projects/MILAB/platform-1/sdk/ui-vue/package.tgz",
+      "@milaboratories/uikit": "file:/Users/aleksandr/Projects/MILAB/platform-1/lib/ui/uikit/package.tgz",
+      "@milaboratories/helpers": "file:/Users/aleksandr/Projects/MILAB/platform-1/lib/util/helpers/package.tgz"
     }
   }
 }
