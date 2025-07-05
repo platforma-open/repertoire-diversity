@@ -7,12 +7,14 @@ export type DiversityType = 'chao1' | 'd50' | 'efronThisted' |
   'normalizedShannonWiener' | 'inverseSimpson' | 'gini';
 
 export type Metric = {
+  id: string;
   type: DiversityType | undefined;
   downsampling: {
     type?: 'none' | 'top' | 'cumtop' | 'hypergeometric' ;
     valueChooser?: 'min' | 'fixed' | 'max' | 'auto';
     n?: number;
   };
+  isExpanded?: boolean;
 };
 
 export type BlockArgs = {
@@ -31,39 +33,49 @@ export const model = BlockModel.create()
   .withArgs<BlockArgs>({
     metrics: [
       {
+        id: 'observed',
         type: 'observed',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
       {
+        id: 'shannonWiener',
         type: 'shannonWiener',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
       {
+        id: 'chao1',
         type: 'chao1',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
       {
+        id: 'gini',
         type: 'gini',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
       {
+        id: 'd50',
         type: 'd50',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
     ],
   })
