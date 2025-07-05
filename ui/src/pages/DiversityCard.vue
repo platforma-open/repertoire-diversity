@@ -2,7 +2,6 @@
 import type { Metric } from '@platforma-open/milaboratories.repertoire-diversity-2.model';
 import type { ListOption } from '@platforma-sdk/ui-vue';
 import { PlBtnGroup, PlDropdown, PlNumberField } from '@platforma-sdk/ui-vue';
-import './metrics-manager.scss';
 import { metricTypeOptions } from './util';
 
 const downsamplingOptions: ListOption<string | undefined>[] = [
