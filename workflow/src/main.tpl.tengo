@@ -9,6 +9,7 @@ canonical := import("@platforma-sdk/workflow-tengo:canonical")
 pSpec := import("@platforma-sdk/workflow-tengo:pframes.spec")
 maps := import("@platforma-sdk/workflow-tengo:maps")
 json := import("json")
+text := import("text")
 
 diversitySw := assets.importSoftware("@platforma-open/milaboratories.repertoire-diversity-2.software:main")
 
@@ -110,19 +111,43 @@ wf.body(func(args) {
 		{ splitDataAndSpec: true, cpu: 1, mem: "32GiB" }
 	)
 
-	trace := pSpec.makeTrace(
-		abundanceSpec,
-		{
-			type: "milaboratories.differential-repertoire-diversity",
-			id: blockId,
-			importance: 30, 
-			label: "Repertoire Diversity"
-		}
-	)
-
 	pf := pframes.pFrameBuilder()
 	for id, v in result {
-		pf.add(id, trace.inject(v.spec), v.data)
+		// Find the corresponding metric for this column
+		columnIndex := 0
+		if id != "sampleId" {
+			// Extract index from column name like "d-0", "d-1", etc.
+			columnIndex = int(id[2:]) // Remove "d-" prefix and convert to int
+		}
+		
+		// Create individual trace for each metric
+		if columnIndex < len(args.metrics) {
+			metric := args.metrics[columnIndex]
+			downsampling := metric.downsampling
+			
+			downsamplingLabel := ""
+			if downsampling.type == "hypergeometric" {
+				if downsampling.valueChooser == "fixed" {
+					downsamplingLabel = "Repertoire Diversity (" + downsampling.type + " - " + downsampling.valueChooser + " - " + string(downsampling.n) + ")"
+				} else {
+					downsamplingLabel = "Repertoire Diversity (" + downsampling.type + " - " + downsampling.valueChooser + ")"
+				}
+			} else {
+				downsamplingLabel = "Repertoire Diversity (" + downsampling.type + ")"
+			}
+			
+			trace := pSpec.makeTrace(
+				abundanceSpec,
+				{
+					type: "milaboratories.differential-repertoire-diversity",
+					id: blockId,
+					importance: 50, 
+					label: downsamplingLabel
+				}
+			)
+			
+			pf.add(id, trace.inject(v.spec), v.data)
+		}
 	}
 	pf = pf.build()
 
