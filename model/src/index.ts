@@ -1,6 +1,6 @@
 import type { GraphMakerState } from '@milaboratories/graph-maker';
-import type { InferOutputsType, PColumnIdAndSpec, PlDataTableState, PlRef } from '@platforma-sdk/model';
-import { BlockModel, createPFrameForGraphs, createPlDataTable } from '@platforma-sdk/model';
+import type { InferOutputsType, PColumnIdAndSpec, PlDataTableStateV2, PlRef } from '@platforma-sdk/model';
+import { BlockModel, createPFrameForGraphs, createPlDataTableStateV2, createPlDataTableV2 } from '@platforma-sdk/model';
 
 export type DiversityType = 'chao1' | 'd50' | 'efronThisted' |
   'observed' | 'shannonWienerIndex' | 'shannonWiener' |
@@ -22,7 +22,7 @@ export type BlockArgs = {
 
 export type UiState = {
   blockTitle: string;
-  tableState?: PlDataTableState;
+  tableState: PlDataTableStateV2;
   graphState: GraphMakerState;
 };
 
@@ -76,13 +76,7 @@ export const model = BlockModel.create()
       currentTab: null,
     },
 
-    tableState: {
-      gridState: {},
-      pTableParams: {
-        sorting: [],
-        filters: [],
-      },
-    },
+    tableState: createPlDataTableStateV2(),
   })
 
   .argsValid((ctx) => ctx.args.abundanceRef !== undefined)
@@ -108,7 +102,7 @@ export const model = BlockModel.create()
       return undefined;
     }
 
-    return createPlDataTable(ctx, pCols, ctx.uiState?.tableState);
+    return createPlDataTableV2(ctx, pCols, ctx.uiState?.tableState);
   })
 
   .output('pf', (ctx) => {
