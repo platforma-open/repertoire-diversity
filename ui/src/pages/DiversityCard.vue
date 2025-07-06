@@ -21,56 +21,52 @@ const props = defineModel<Metric>({ default: {
 </script>
 
 <template>
-  <div class="d-flex flex-column gap-24">
-    <PlDropdown
-      v-model="props.type" :options="metricTypeOptions"
-      label="Type"
-      required
-    />
+  <PlDropdown
+    v-model="props.type" :options="metricTypeOptions"
+    label="Type"
+    required
+  />
 
-    <PlDropdown
-      v-model="props.downsampling.type" :options="downsamplingOptions"
-      label="Downsampling"
-      required
-    />
+  <PlDropdown
+    v-model="props.downsampling.type" :options="downsamplingOptions"
+    label="Downsampling"
+    required
+  />
 
-    <PlNumberField
-      v-if="props.downsampling.type === 'cumtop'"
-      v-model="props.downsampling.n"
-      label="Select % of the repertoire to include"
-      :minValue="0"
-      :maxValue="100"
-      :step="1"
-      required
-    />
+  <PlNumberField
+    v-if="props.downsampling.type === 'cumtop'"
+    v-model="props.downsampling.n"
+    label="Select % of the repertoire to include"
+    :minValue="0"
+    :maxValue="100"
+    :step="1"
+    required
+  />
 
-    <PlNumberField
-      v-if="props.downsampling.type === 'top'"
-      v-model="props.downsampling.n"
-      label="Select Top N"
-      :minValue="0"
-      required
-    />
+  <PlNumberField
+    v-if="props.downsampling.type === 'top'"
+    v-model="props.downsampling.n"
+    label="Select Top N"
+    :minValue="0"
+    required
+  />
 
-    <PlBtnGroup
-      v-if="props.downsampling.type === 'hypergeometric'"
-      v-model="props.downsampling.valueChooser"
-      :options="[
-        { value: 'fixed', label: 'Fixed' },
-        { value: 'min', label: 'Min', },
-        { value: 'auto', label: 'Auto', },
-      ]"
-    />
+  <PlBtnGroup
+    v-if="props.downsampling.type === 'hypergeometric'"
+    v-model="props.downsampling.valueChooser"
+    :options="[
+      { value: 'fixed', label: 'Fixed' },
+      { value: 'min', label: 'Min', },
+      { value: 'auto', label: 'Auto', },
+    ]"
+  />
 
-    <PlNumberField
-      v-if="props.downsampling.valueChooser === 'fixed'
-        && props.downsampling.type === 'hypergeometric'"
-      v-model="props.downsampling.n"
-      label="Select N"
-      :minValue="0"
-      required
-    />
-  </div>
+  <PlNumberField
+    v-if="props.downsampling.valueChooser === 'fixed'
+      && props.downsampling.type === 'hypergeometric'"
+    v-model="props.downsampling.n"
+    label="Select N"
+    :minValue="0"
+    required
+  />
 </template>
-
-<!-- @click="removeMetric(index)" -->
