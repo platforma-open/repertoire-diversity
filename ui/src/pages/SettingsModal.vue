@@ -53,6 +53,7 @@ const addMetric = () => {
       :get-item-key="(item) => item.id"
       :is-expanded="(item) => item.isExpanded === true"
       :on-expand="(item) => item.isExpanded = !item.isExpanded"
+      :disable-dragging="true"
     >
       <template #item-title="{ item }">
         {{ item.type ? getMetricLabel(item.type) : 'New Metric' }}
