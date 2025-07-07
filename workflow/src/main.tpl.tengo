@@ -36,6 +36,27 @@ getLabel := func(mt) {
 	return mt;
 }
 
+getDownsamplingLabel := func(downsampling) {
+	base := "Diversity Downsampling "
+	
+	if downsampling.type == "none" {
+		return base + "(none)"
+	}
+	
+	base += "(" + downsampling.type
+	
+	if downsampling.type == "hypergeometric" && downsampling.valueChooser {
+		base += " - " + downsampling.valueChooser
+		if downsampling.valueChooser == "fixed" && downsampling.n {
+			base += " - " + string(downsampling.n)
+		}
+	} else if (downsampling.type == "top" || downsampling.type == "cumtop") && downsampling.n {
+		base += " - " + string(downsampling.n)
+	}
+	
+	return base + ")"
+}
+
 getSpecs := func(abundanceSpec, metrics) {
 	columns := []
 
@@ -113,36 +134,16 @@ wf.body(func(args) {
 
 	pf := pframes.pFrameBuilder()
 	for id, v in result {
-		// Find the corresponding metric for this column
-		columnIndex := 0
 		if id != "sampleId" {
-			// Extract index from column name like "d-0", "d-1", etc.
-			columnIndex = int(id[2:]) // Remove "d-" prefix and convert to int
-		}
-		
-		// Create individual trace for each metric
-		if columnIndex < len(args.metrics) {
-			metric := args.metrics[columnIndex]
-			downsampling := metric.downsampling
-			
-			downsamplingLabel := ""
-			if downsampling.type == "hypergeometric" {
-				if downsampling.valueChooser == "fixed" {
-					downsamplingLabel = "Repertoire Diversity (" + downsampling.type + " - " + downsampling.valueChooser + " - " + string(downsampling.n) + ")"
-				} else {
-					downsamplingLabel = "Repertoire Diversity (" + downsampling.type + " - " + downsampling.valueChooser + ")"
-				}
-			} else {
-				downsamplingLabel = "Repertoire Diversity (" + downsampling.type + ")"
-			}
+			downsampling := json.decode(v.spec.domain["pl7.app/downsampling"])
 			
 			trace := pSpec.makeTrace(
 				abundanceSpec,
 				{
 					type: "milaboratories.differential-repertoire-diversity",
 					id: blockId,
-					importance: 50, 
-					label: downsamplingLabel
+					importance: 65, 
+					label: getDownsamplingLabel(downsampling)
 				}
 			)
 			
