@@ -9,6 +9,7 @@ canonical := import("@platforma-sdk/workflow-tengo:canonical")
 pSpec := import("@platforma-sdk/workflow-tengo:pframes.spec")
 maps := import("@platforma-sdk/workflow-tengo:maps")
 json := import("json")
+text := import("text")
 
 diversitySw := assets.importSoftware("@platforma-open/milaboratories.repertoire-diversity-2.software:main")
 
@@ -33,6 +34,27 @@ getLabel := func(mt) {
 		return "Gini Index"
 	}
 	return mt;
+}
+
+getDownsamplingLabel := func(downsampling) {
+	base := "Diversity Downsampling "
+	
+	if downsampling.type == "none" {
+		return base + "(none)"
+	}
+	
+	base += "(" + downsampling.type
+	
+	if downsampling.type == "hypergeometric" && downsampling.valueChooser {
+		base += " - " + downsampling.valueChooser
+		if downsampling.valueChooser == "fixed" && downsampling.n {
+			base += " - " + string(downsampling.n)
+		}
+	} else if (downsampling.type == "top" || downsampling.type == "cumtop") && downsampling.n {
+		base += " - " + string(downsampling.n)
+	}
+	
+	return base + ")"
 }
 
 getSpecs := func(abundanceSpec, metrics) {
@@ -110,19 +132,23 @@ wf.body(func(args) {
 		{ splitDataAndSpec: true, cpu: 1, mem: "32GiB" }
 	)
 
-	trace := pSpec.makeTrace(
-		abundanceSpec,
-		{
-			type: "milaboratories.differential-repertoire-diversity",
-			id: blockId,
-			importance: 30, 
-			label: "Repertoire Diversity"
-		}
-	)
-
 	pf := pframes.pFrameBuilder()
 	for id, v in result {
-		pf.add(id, trace.inject(v.spec), v.data)
+		if id != "sampleId" {
+			downsampling := json.decode(v.spec.domain["pl7.app/downsampling"])
+			
+			trace := pSpec.makeTrace(
+				abundanceSpec,
+				{
+					type: "milaboratories.differential-repertoire-diversity",
+					id: blockId,
+					importance: 55, 
+					label: getDownsamplingLabel(downsampling)
+				}
+			)
+			
+			pf.add(id, trace.inject(v.spec), v.data)
+		}
 	}
 	pf = pf.build()
 
