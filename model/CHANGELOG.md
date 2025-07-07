@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.model
 
+## 1.4.0
+
+### Minor Changes
+
+- 13f110e: Migrate to PlElementList
+
 ## 1.3.1
 
 ### Patch Changes

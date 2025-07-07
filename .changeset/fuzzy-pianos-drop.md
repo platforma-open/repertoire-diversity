@@ -1,6 +1,0 @@
----
-'@platforma-open/milaboratories.repertoire-diversity-2.model': minor
-'@platforma-open/milaboratories.repertoire-diversity-2.ui': minor
----
-
-Migrate to PlElementList
