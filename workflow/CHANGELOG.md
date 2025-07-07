@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.workflow
 
+## 1.5.0
+
+### Minor Changes
+
+- 057ca18: Modify trace importance and trace label to be more informative
+
 ## 1.4.1
 
 ### Patch Changes
