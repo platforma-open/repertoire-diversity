@@ -1,18 +1,20 @@
 import type { GraphMakerState } from '@milaboratories/graph-maker';
-import type { InferOutputsType, PColumnIdAndSpec, PlDataTableState, PlRef } from '@platforma-sdk/model';
-import { BlockModel, createPFrameForGraphs, createPlDataTable } from '@platforma-sdk/model';
+import type { InferOutputsType, PColumnIdAndSpec, PlDataTableStateV2, PlRef } from '@platforma-sdk/model';
+import { BlockModel, createPFrameForGraphs, createPlDataTableStateV2, createPlDataTableV2 } from '@platforma-sdk/model';
 
 export type DiversityType = 'chao1' | 'd50' | 'efronThisted' |
   'observed' | 'shannonWienerIndex' | 'shannonWiener' |
   'normalizedShannonWiener' | 'inverseSimpson' | 'gini';
 
 export type Metric = {
+  id: string;
   type: DiversityType | undefined;
   downsampling: {
     type?: 'none' | 'top' | 'cumtop' | 'hypergeometric' ;
     valueChooser?: 'min' | 'fixed' | 'max' | 'auto';
     n?: number;
   };
+  isExpanded?: boolean;
 };
 
 export type BlockArgs = {
@@ -22,7 +24,7 @@ export type BlockArgs = {
 
 export type UiState = {
   blockTitle: string;
-  tableState?: PlDataTableState;
+  tableState: PlDataTableStateV2;
   graphState: GraphMakerState;
 };
 
@@ -31,39 +33,49 @@ export const model = BlockModel.create()
   .withArgs<BlockArgs>({
     metrics: [
       {
+        id: 'observed',
         type: 'observed',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
       {
+        id: 'shannonWiener',
         type: 'shannonWiener',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
       {
+        id: 'chao1',
         type: 'chao1',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
       {
+        id: 'gini',
         type: 'gini',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
       {
+        id: 'd50',
         type: 'd50',
         downsampling: {
           type: 'hypergeometric',
           valueChooser: 'auto',
         },
+        isExpanded: false,
       },
     ],
   })
@@ -76,13 +88,7 @@ export const model = BlockModel.create()
       currentTab: null,
     },
 
-    tableState: {
-      gridState: {},
-      pTableParams: {
-        sorting: [],
-        filters: [],
-      },
-    },
+    tableState: createPlDataTableStateV2(),
   })
 
   .argsValid((ctx) => ctx.args.abundanceRef !== undefined)
@@ -108,7 +114,7 @@ export const model = BlockModel.create()
       return undefined;
     }
 
-    return createPlDataTable(ctx, pCols, ctx.uiState?.tableState);
+    return createPlDataTableV2(ctx, pCols, ctx.uiState?.tableState);
   })
 
   .output('pf', (ctx) => {
