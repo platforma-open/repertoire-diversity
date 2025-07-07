@@ -142,7 +142,7 @@ wf.body(func(args) {
 				{
 					type: "milaboratories.differential-repertoire-diversity",
 					id: blockId,
-					importance: 65, 
+					importance: 55, 
 					label: getDownsamplingLabel(downsampling)
 				}
 			)
