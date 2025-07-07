@@ -19,12 +19,13 @@ function setAbundanceRef(abundanceRef?: PlRef) {
 
 const settingsAreShown = defineModel<boolean>({ required: true });
 
-// Counter to make new metric IDs always unique
-let metricCounter = 5;
+const generateUniqueId = () => {
+  return `metric-${Date.now()}`;
+};
 
 const addMetric = () => {
   app.updateArgs((args) => {
-    const newId = `metric-${metricCounter++}`;
+    const newId = generateUniqueId();
     args.metrics.push({
       id: newId,
       type: undefined,

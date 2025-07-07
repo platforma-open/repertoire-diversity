@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { PlAgDataTableV2, PlBlockPage, PlBtnGhost, PlEditableTitle, PlMaskIcon24, usePlDataTableSettingsV2 } from '@platforma-sdk/ui-vue';
+import { PlAgDataTableToolsPanel, PlAgDataTableV2, PlBlockPage, PlBtnGhost, PlEditableTitle, PlMaskIcon24, usePlDataTableSettingsV2 } from '@platforma-sdk/ui-vue';
 import { ref } from 'vue';
 import { useApp } from '../app';
 import SettingsModal from './SettingsModal.vue';
@@ -24,6 +24,7 @@ const showSettings = () => {
       <PlEditableTitle v-model="app.model.ui.blockTitle" max-width="600px" :max-length="40" />
     </template>
     <template #append>
+      <PlAgDataTableToolsPanel />
       <PlBtnGhost @click.stop="showSettings">
         Settings
         <template #append>
