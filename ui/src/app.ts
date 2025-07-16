@@ -8,7 +8,7 @@ import MainPage from './pages/MainPage.vue';
 export const sdkPlugin = defineApp(model, (app) => {
   watch(
     () => app.model.ui.metrics,
-    debounce((value) => app.model.args.metrics = convertMetricsUiToArgs(toRaw(value)), 1000),
+    debounce((value) => app.model.args.metrics = convertMetricsUiToArgs(toRaw(value)), 500),
     { deep: true, immediate: true },
   );
 
