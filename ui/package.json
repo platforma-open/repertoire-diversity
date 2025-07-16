@@ -10,23 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@milaboratories/graph-maker": "catalog:",
-    "@milaboratories/helpers": "catalog:",
     "@platforma-open/milaboratories.repertoire-diversity-2.model": "workspace:*",
-    "@platforma-sdk/model": "catalog:",
+    "@milaboratories/graph-maker": "catalog:",
     "@platforma-sdk/ui-vue": "catalog:",
+    "@platforma-sdk/model": "catalog:",
     "@types/lodash.debounce": "^4.0.9",
-    "@types/lodash.once": "^4.1.9",
     "lodash.debounce": "^4.0.8",
-    "lodash.once": "^4.1.1",
     "vue": "catalog:"
   },
   "devDependencies": {
-    "@platforma-sdk/eslint-config": "catalog:",
     "@vitejs/plugin-vue": "catalog:",
-    "sass-embedded": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",
-    "vue-tsc": "catalog:"
+    "vue-tsc": "catalog:",
+    "@platforma-sdk/eslint-config": "catalog:",
+    "sass-embedded": "catalog:"
   }
 }
