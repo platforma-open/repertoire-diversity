@@ -3,11 +3,12 @@ import { defineApp } from '@platforma-sdk/ui-vue';
 import DiversityGraph from './pages/DiversityGraph.vue';
 import MainPage from './pages/MainPage.vue';
 import { toRaw, watch } from 'vue';
+import { debounce } from '@milaboratories/helpers';
 
 export const sdkPlugin = defineApp(model, (app) => {
   watch(
     () => app.model.ui.metrics,
-    (value) => app.model.args.metrics = convertMetricsUiToArgs(toRaw(value)),
+    debounce((value) => app.model.args.metrics = convertMetricsUiToArgs(toRaw(value)), 1000),
     { deep: true, immediate: true },
   );
 
