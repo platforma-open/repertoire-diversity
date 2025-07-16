@@ -5,10 +5,8 @@ import { PlBtnSecondary, PlDropdownRef, PlElementList, PlSlideModal } from '@pla
 import { useApp } from '../app';
 import DiversityCard from './DiversityCard.vue';
 import { getMetricLabel } from './util';
-import { useMetrics } from './metrics';
 
 const app = useApp();
-const { metrics, addMetric } = useMetrics();
 
 function setAbundanceRef(abundanceRef?: PlRef) {
   app.model.args.abundanceRef = abundanceRef;
@@ -26,17 +24,14 @@ const generateUniqueId = () => {
 };
 
 const addMetric = () => {
-  app.updateArgs((args) => {
-    const newId = generateUniqueId();
-    args.metrics.push({
-      id: newId,
-      type: undefined,
-      downsampling: {
-        type: 'none',
-        valueChooser: 'auto',
-      },
-      isExpanded: true, // Auto-expand new metrics
-    });
+  app.model.ui.metrics?.push({
+    id: generateUniqueId(),
+    type: undefined,
+    downsampling: {
+      type: 'none',
+      valueChooser: 'auto',
+    },
+    isExpanded: true, // Auto-expand new metrics
   });
 };
 </script>
@@ -52,7 +47,7 @@ const addMetric = () => {
     />
 
     <PlElementList
-      v-model:items="app.model.args.metrics"
+      v-model:items="app.model.ui.metrics"
       :get-item-key="(item) => item.id"
       :is-expanded="(item) => item.isExpanded === true"
       :on-expand="(item) => item.isExpanded = !item.isExpanded"
@@ -62,7 +57,7 @@ const addMetric = () => {
         {{ item.type ? getMetricLabel(item.type) : 'New Metric' }}
       </template>
       <template #item-content="{ index }">
-        <DiversityCard v-model="app.model.args.metrics[index]" />
+        <DiversityCard v-model="app.model.ui.metrics[index]" />
       </template>
     </PlElementList>
 
