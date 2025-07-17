@@ -6,6 +6,7 @@ dev/
 work/
 log/
 .turbo
+.idea
 vite.config.*.timestamp-*
 software/**/*.sw.json
 software/*.tgz
