@@ -1,5 +1,16 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.5.0
+
+### Minor Changes
+
+- 365f92f: Use ui state for metric metadata
+
+### Patch Changes
+
+- Updated dependencies [365f92f]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.5.0
+
 ## 1.4.0
 
 ### Minor Changes
