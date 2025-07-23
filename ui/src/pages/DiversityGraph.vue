@@ -8,7 +8,7 @@ import { useApp } from '../app';
 
 const app = useApp();
 
-const defaultOptions = computed((): GraphMakerProps['defaultOptions'] => {
+const defaultOptions = computed((): PredefinedGraphOption<'discrete'>[] | undefined => {
   if (!app.model.outputs.pcols)
     return undefined;
 
