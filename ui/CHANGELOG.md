@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.5.1
+
+### Patch Changes
+
+- 5cf567c: Update libraries versions
+
 ## 1.5.0
 
 ### Minor Changes
