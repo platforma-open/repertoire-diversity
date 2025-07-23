@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.software
 
+## 1.3.2
+
+### Patch Changes
+
+- 12dded0: Update used python package versions
+
 ## 1.3.1
 
 ### Patch Changes
