@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.model
 
+## 1.5.1
+
+### Patch Changes
+
+- 6ff86d7: Updated SDK
+
 ## 1.5.0
 
 ### Minor Changes
