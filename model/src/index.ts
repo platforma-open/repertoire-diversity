@@ -98,7 +98,8 @@ export const model = BlockModel.create()
     ],
   })
 
-  .argsValid((ctx) => ctx.args.abundanceRef !== undefined)
+  .argsValid((ctx) => ctx.args.abundanceRef !== undefined
+    && ctx.args.metrics.every((metric) => metric.type !== undefined))
 
   .output('abundanceOptions', (ctx) =>
     ctx.resultPool.getOptions([{
@@ -159,6 +160,6 @@ export const model = BlockModel.create()
     { type: 'link', href: '/diversityGraph', label: 'Diversity Graph' },
   ])
 
-  .done();
+  .done(2);
 
 export type BlockOutputs = InferOutputsType<typeof model>;
