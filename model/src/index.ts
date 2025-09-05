@@ -98,7 +98,8 @@ export const model = BlockModel.create()
     ],
   })
 
-  .argsValid((ctx) => ctx.args.abundanceRef !== undefined)
+  .argsValid((ctx) => ctx.args.abundanceRef !== undefined
+    && ctx.args.metrics.every((metric) => metric.type !== undefined))
 
   .output('abundanceOptions', (ctx) =>
     ctx.resultPool.getOptions([{
