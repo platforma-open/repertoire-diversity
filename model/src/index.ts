@@ -159,6 +159,6 @@ export const model = BlockModel.create()
     { type: 'link', href: '/diversityGraph', label: 'Diversity Graph' },
   ])
 
-  .done();
+  .done(2);
 
 export type BlockOutputs = InferOutputsType<typeof model>;
