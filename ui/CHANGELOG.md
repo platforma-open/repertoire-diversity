@@ -1,5 +1,12 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.5.3
+
+### Patch Changes
+
+- Updated dependencies [d0287b6]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.5.2
+
 ## 1.5.2
 
 ### Patch Changes
