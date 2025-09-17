@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.model
 
+## 1.5.2
+
+### Patch Changes
+
+- d0287b6: support numpy on Mac OS X 13 and sdk update
+
 ## 1.5.1
 
 ### Patch Changes
