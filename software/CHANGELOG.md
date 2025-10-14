@@ -1,5 +1,14 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.software
 
+## 1.3.5
+
+### Patch Changes
+
+- 3e39f73: technical release
+- 37c4e58: technical release
+- 7c4d608: technical release
+- a2200a0: technical release
+
 ## 1.3.4
 
 ### Patch Changes

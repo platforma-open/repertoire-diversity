@@ -1,5 +1,21 @@
 # @platforma-open/milaboratories.repertoire-diversity-2
 
+## 2.0.21
+
+### Patch Changes
+
+- 3e39f73: technical release
+- 37c4e58: technical release
+- 7c4d608: technical release
+- a2200a0: technical release
+- Updated dependencies [3e39f73]
+- Updated dependencies [37c4e58]
+- Updated dependencies [7c4d608]
+- Updated dependencies [a2200a0]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.5.3
+  - @platforma-open/milaboratories.repertoire-diversity-2.ui@1.5.4
+  - @platforma-open/milaboratories.repertoire-diversity-2.workflow@1.5.4
+
 ## 2.0.20
 
 ### Patch Changes
