@@ -1,4 +1,4 @@
-import pandas as pd
+import polars as pl
 import numpy as np
 from numpy.random import default_rng
 import json
@@ -26,15 +26,14 @@ def parse_params():
 
 
 params = parse_params()
-data = pd.read_csv(input_file, sep="\t")
+data = pl.read_csv(input_file, separator="\t")
 
-totals = data.groupby('sampleId')['count'].sum().reset_index()
-# Calculate 20th percentile across all totals
-q20 = totals['count'].quantile(0.2)
-# Find the minimum value that is above 0.5*q20
-min_above_threshold = totals[totals['count'] > 0.5 * q20]['count'].min()
-fixed_auto_downsampling_value = min_above_threshold if not pd.isna(
-    min_above_threshold) else q20
+totals = data.group_by('sampleId').agg(pl.sum('count'))
+q20 = totals['count'].quantile(0.2, interpolation="linear")
+
+min_above_threshold = totals.filter(
+    pl.col('count') > 0.5 * q20)['count'].min()
+fixed_auto_downsampling_value = min_above_threshold if min_above_threshold is not None else q20
 
 
 def downsample(df, downsampling):
@@ -43,21 +42,22 @@ def downsample(df, downsampling):
 
     if downsampling['type'] == "top":
         top_n = downsampling['n']
-        return df.nlargest(top_n, 'count')
+        return df.top_k(top_n, by='count')
 
     if downsampling['type'] == "cumtop":
         top_fraction = downsampling['n']
         target_count = top_fraction * df['count'].sum()
 
-        sorted = df.sort_values('count', ascending=False)
+        sorted_df = df.sort('count', descending=True)
 
-        sorted['cumsum'] = sorted['count'].cumsum()
-        selected_rows = sorted[sorted['cumsum'] <= target_count]
+        sorted_df = sorted_df.with_columns(
+            pl.col('count').cumsum().alias('cumsum'))
+        selected_rows = sorted_df.filter(pl.col('cumsum') <= target_count)
 
         # If no rows meet the criteria (rare case), take at least the top row
-        if selected_rows.empty:
-            selected_rows = sorted.head(1)
-        return selected_rows
+        if selected_rows.is_empty():
+            selected_rows = sorted_df.head(1)
+        return selected_rows.drop('cumsum')
 
     elif downsampling['type'] == "hypergeometric":
         if downsampling['valueChooser'] == "min":
@@ -72,10 +72,11 @@ def downsample(df, downsampling):
 
         rng = default_rng(31415)  # always fix seed for reproducibility
 
-        df["count"] = rng.multivariate_hypergeometric(
-            df["count"].astype(np.int64), int(value))
+        new_counts = rng.multivariate_hypergeometric(
+            df["count"].to_numpy().astype(np.int64), int(value))
 
-        df = df.loc[df["count"] != 0]
+        df = df.with_columns(pl.Series("count", new_counts))
+        df = df.filter(pl.col("count") != 0)
         return df
 
     else:
@@ -83,20 +84,21 @@ def downsample(df, downsampling):
 
 
 def chao1(df):
-    singletons = df[df['count'] == 1.]['count'].count()
-    doubletons = df[df['count'] == 2.]['count'].count()
-    f0 = singletons * (singletons - 1) / 2 / (doubletons + 1)
-    observed = df['count'].count()
+    singletons = df.filter(pl.col('count') == 1.0).height
+    doubletons = df.filter(pl.col('count') == 2.0).height
+    f0 = singletons * (singletons - 1) / 2 / \
+        (doubletons + 1) if doubletons > -1 else 0
+    observed = df.height
     chao1 = observed + f0
     return chao1
 
 
 def d50(df):
     # Return zero if the dataframe is empty
-    if df.empty:
+    if df.is_empty():
         return 0
     # Sort the dataframe by count in descending order
-    sorted_df = df.sort_values('count', ascending=False).reset_index(drop=True)
+    sorted_df = df.sort('count', descending=True)
 
     # Calculate the total sum of counts
     total_count = sorted_df['count'].sum()
@@ -105,10 +107,11 @@ def d50(df):
     target_count = total_count * 0.5
 
     # Calculate cumulative sum
-    sorted_df['cumsum'] = sorted_df['count'].cumsum()
+    sorted_df = sorted_df.with_columns(
+        pl.col('count').cum_sum().alias('cumsum'))
 
     # Find the number of clonotypes needed to reach 50% of the total count
-    return len(sorted_df[sorted_df['cumsum'] <= target_count]) + 1
+    return sorted_df.filter(pl.col('cumsum') <= target_count).height + 1
 
 
 def efronThisted(df):
@@ -116,7 +119,7 @@ def efronThisted(df):
         h = np.zeros(depth)
         nx = np.zeros(depth)
         for y in range(1, depth+1):
-            nx[y-1] = len(df[df['count'] == y].index)
+            nx[y-1] = df.filter(pl.col('count') == y).height
             for x in range(1, y+1):
                 coeff = binom(y-1, x-1)
                 if x % 2 == 1:
@@ -128,7 +131,9 @@ def efronThisted(df):
         for i in range(depth):
             l.append(h[i] * nx[i])
             p.append(h[i] * h[i] * nx[i])
-        S = len(df.index) + sum(l)
+        S = df.height + sum(l)
+        if S == 0:
+            return S
         D = np.sqrt(sum(p))
         CV = D / S
         if CV >= 0.05:
@@ -137,7 +142,7 @@ def efronThisted(df):
 
 
 def observed(df):
-    return len(df)
+    return df.height
 
 
 def shannonWienerIndex(df):
@@ -149,7 +154,7 @@ def shannonWiener(df):
 
 
 def normalizedShannonWiener(df):
-    return shannonWienerIndex(df) / np.log(len(df))
+    return shannonWienerIndex(df) / np.log(df.height)
 
 
 def inverseSimpson(df):
@@ -157,7 +162,7 @@ def inverseSimpson(df):
 
 
 def gini(df):
-    return 1 - (-1/inverseSimpson(df))
+    return 1 - (df['fraction'] * df['fraction']).sum()
 
 
 def calculateMetric(type, df):
@@ -183,17 +188,27 @@ def calculateMetric(type, df):
         raise ValueError(f"Invalid metric: {type}")
 
 
-result = pd.DataFrame({'sampleId': data['sampleId'].unique()})
-bySample = data.groupby('sampleId')
+all_results = []
+for sampleId_tuple, df in data.group_by('sampleId'):
+    sampleId = sampleId_tuple[0] if isinstance(
+        sampleId_tuple, tuple) else sampleId_tuple
+    sample_results = {'sampleId': sampleId}
+    for index, metric in enumerate(params):
+        metric_id = "d-" + str(index)
+        downsampled = downsample(df, metric["downsampling"])
 
-for index, metric in enumerate(params):
-    metric_id = "d-" + str(index)
-    result[metric_id] = None
-    for sampleId, df in bySample:
-        downsampled = downsample(df.reset_index(), metric["downsampling"])
-        downsampled['fraction'] = downsampled['count'] / \
-            downsampled['count'].sum()
-        result.loc[result['sampleId'] == sampleId, metric_id] =\
-            calculateMetric(metric["type"], downsampled)
+        value = 0.0
+        if not downsampled.is_empty():
+            total_count = downsampled['count'].sum()
+            if total_count > 0:
+                downsampled = downsampled.with_columns(
+                    (pl.col('count') / total_count).alias('fraction'))
+                metric_value = calculateMetric(metric["type"], downsampled)
+                value = float(
+                    metric_value) if metric_value is not None else 0.0
 
-result.to_csv('result.tsv', sep='\t', index=False)
+        sample_results[metric_id] = value
+    all_results.append(sample_results)
+
+result = pl.DataFrame(all_results)
+result.write_csv('result.tsv', separator='\t')
