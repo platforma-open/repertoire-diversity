@@ -161,8 +161,19 @@ def inverseSimpson(df):
     return 1 / (df['fraction'] * df['fraction']).sum()
 
 
-def gini(df):
+def giniSimpson(df):
     return 1 - (df['fraction'] * df['fraction']).sum()
+
+
+def giniIndex(df):
+    # Gini coefficient can be calculated on sorted fractions
+    fractions = df['fraction'].sort().to_numpy()
+    n = len(fractions)
+    if n == 0:
+        return 0.0
+    index = np.arange(1, n + 1)
+    # Gini coefficient formula
+    return (2 * np.sum(index * fractions)) / (n * np.sum(fractions)) - ((n + 1) / n)
 
 
 def calculateMetric(type, df):
@@ -183,7 +194,9 @@ def calculateMetric(type, df):
     elif type == "inverseSimpson":
         return inverseSimpson(df)
     elif type == "gini":
-        return gini(df)
+        return giniIndex(df)
+    elif type == "giniSimpson":
+        return giniSimpson(df)
     else:
         raise ValueError(f"Invalid metric: {type}")
 
