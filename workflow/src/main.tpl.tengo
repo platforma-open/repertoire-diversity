@@ -90,7 +90,7 @@ getSpecs := func(abundanceSpec, metrics) {
 			}
 		], 
 		columns: columns,
-		storageFormat: "Binary",
+		storageFormat: "Parquet",
 		partitionKeyLength: 0
 	}
 }
