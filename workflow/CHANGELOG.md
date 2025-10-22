@@ -1,5 +1,16 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.workflow
 
+## 1.6.0
+
+### Minor Changes
+
+- 192909e: Support parquet format (update SDK); Fix for Gini Index calculation
+
+### Patch Changes
+
+- Updated dependencies [192909e]
+  - @platforma-open/milaboratories.repertoire-diversity-2.software@1.4.0
+
 ## 1.5.4
 
 ### Patch Changes
