@@ -177,15 +177,13 @@ def shannonWiener(df):
 
 
 def normalizedShannonWiener(df):
-    if df.is_empty() or df.height == 0:
+    if df.height <= 1:
         return 0.0
     result = shannonWienerIndex(df) / np.log(df.height)
-    return result if not (isinstance(result, float) and np.isnan(result)) else 0.0
+    return result
 
 
 def inverseSimpson(df):
-    if df.is_empty():
-        return 0.0
     denominator = (df['fraction'] * df['fraction']).sum()
     if denominator == 0:
         return 0.0
@@ -201,8 +199,6 @@ def giniSimpson(df):
 
 
 def giniIndex(df):
-    if df.is_empty():
-        return 0.0
     # Gini coefficient can be calculated on sorted fractions
     fractions = df['fraction'].sort().to_numpy()
     n = len(fractions)
