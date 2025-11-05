@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.software
 
+## 1.5.0
+
+### Minor Changes
+
+- 8d7b553: allow empty input, replace NA/null with 0
+
 ## 1.4.0
 
 ### Minor Changes
