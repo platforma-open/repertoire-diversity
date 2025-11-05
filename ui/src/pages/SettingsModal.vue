@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { PlRef } from '@platforma-sdk/model';
-import { plRefsEqual } from '@platforma-sdk/model';
-import { PlBtnSecondary, PlDropdownRef, PlElementList, PlSlideModal } from '@platforma-sdk/ui-vue';
+import { plRefsEqual, getRawPlatformaInstance } from '@platforma-sdk/model';
+import { PlBtnSecondary, PlDropdownRef, PlElementList, PlSlideModal, PlAlert } from '@platforma-sdk/ui-vue';
+import { asyncComputed } from '@vueuse/core';
 import { useApp } from '../app';
 import DiversityCard from './DiversityCard.vue';
 import { getMetricLabel } from './util';
@@ -34,6 +35,11 @@ const addMetric = () => {
     isExpanded: true, // Auto-expand new metrics
   });
 };
+
+const isEmpty = asyncComputed(async () => {
+  if (app.model.outputs.pt === undefined) return undefined;
+  return (await getRawPlatformaInstance().pFrameDriver.getShape(app.model.outputs.pt.visibleTableHandle)).rows === 0;
+});
 </script>
 
 <template>
@@ -45,6 +51,12 @@ const addMetric = () => {
       required
       @update:model-value="setAbundanceRef"
     />
+
+    <PlAlert v-if="isEmpty === true" type="warn" :style="{ width: '320px' }">
+      <template #title>Empty dataset selection</template>
+      The input dataset you have selected is empty.
+      Please choose a different dataset.
+    </PlAlert>
 
     <PlElementList
       v-model:items="app.model.ui.metrics"

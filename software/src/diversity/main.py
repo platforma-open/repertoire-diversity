@@ -28,12 +28,23 @@ def parse_params():
 params = parse_params()
 data = pl.read_csv(input_file, separator="\t")
 
-totals = data.group_by('sampleId').agg(pl.sum('count'))
-q20 = totals['count'].quantile(0.2, interpolation="linear")
-
-min_above_threshold = totals.filter(
-    pl.col('count') > 0.5 * q20)['count'].min()
-fixed_auto_downsampling_value = min_above_threshold if min_above_threshold is not None else q20
+# Handle empty data
+if data.is_empty():
+    totals = pl.DataFrame({'sampleId': [], 'count': []})
+    q20 = None
+    fixed_auto_downsampling_value = None
+else:
+    totals = data.group_by('sampleId').agg(pl.sum('count'))
+    q20 = totals['count'].quantile(0.2, interpolation="linear")
+    if q20 is None or (isinstance(q20, float) and np.isnan(q20)):
+        q20 = None
+    
+    if q20 is not None:
+        min_above_threshold = totals.filter(
+            pl.col('count') > 0.5 * q20)['count'].min()
+        fixed_auto_downsampling_value = min_above_threshold if min_above_threshold is not None else q20
+    else:
+        fixed_auto_downsampling_value = None
 
 
 def downsample(df, downsampling):
@@ -61,13 +72,13 @@ def downsample(df, downsampling):
 
     elif downsampling['type'] == "hypergeometric":
         if downsampling['valueChooser'] == "min":
-            value = totals['count'].min()
+            value = totals['count'].min() if not totals.is_empty() else None
         elif downsampling['valueChooser'] == "fixed":
             value = downsampling['n']
         elif downsampling['valueChooser'] == "auto":
             value = fixed_auto_downsampling_value
 
-        if df['count'].sum() < value:
+        if value is None or df['count'].sum() < value:
             return df
 
         rng = default_rng(31415)  # always fix seed for reproducibility
@@ -84,19 +95,21 @@ def downsample(df, downsampling):
 
 
 def chao1(df):
+    if df.is_empty():
+        return 0.0
     singletons = df.filter(pl.col('count') == 1.0).height
     doubletons = df.filter(pl.col('count') == 2.0).height
     f0 = singletons * (singletons - 1) / 2 / \
         (doubletons + 1) if doubletons > -1 else 0
     observed = df.height
     chao1 = observed + f0
-    return chao1
+    return chao1 if not (isinstance(chao1, float) and np.isnan(chao1)) else 0.0
 
 
 def d50(df):
     # Return zero if the dataframe is empty
     if df.is_empty():
-        return 0
+        return 0.0
     # Sort the dataframe by count in descending order
     sorted_df = df.sort('count', descending=True)
 
@@ -111,10 +124,13 @@ def d50(df):
         pl.col('count').cum_sum().alias('cumsum'))
 
     # Find the number of clonotypes needed to reach 50% of the total count
-    return sorted_df.filter(pl.col('cumsum') <= target_count).height + 1
+    result = float(sorted_df.filter(pl.col('cumsum') <= target_count).height + 1)
+    return result if not (isinstance(result, float) and np.isnan(result)) else 0.0
 
 
 def efronThisted(df):
+    if df.is_empty():
+        return 0.0
     for depth in range(1, 21):
         h = np.zeros(depth)
         nx = np.zeros(depth)
@@ -133,36 +149,53 @@ def efronThisted(df):
             p.append(h[i] * h[i] * nx[i])
         S = df.height + sum(l)
         if S == 0:
-            return S
+            return 0.0
         D = np.sqrt(sum(p))
         CV = D / S
         if CV >= 0.05:
             break
-    return S
+    result = S
+    return result if not (isinstance(result, float) and np.isnan(result)) else 0.0
 
 
 def observed(df):
-    return df.height
+    return float(df.height) if not df.is_empty() else 0.0
 
 
 def shannonWienerIndex(df):
-    return -(df['fraction'] * np.log(df['fraction'])).sum()
+    if df.is_empty():
+        return 0.0
+    result = -(df['fraction'] * np.log(df['fraction'])).sum()
+    return result if not (isinstance(result, float) and np.isnan(result)) else 0.0
 
 
 def shannonWiener(df):
-    return np.exp(shannonWienerIndex(df))
+    if df.is_empty():
+        return 0.0
+    result = np.exp(shannonWienerIndex(df))
+    return result if not (isinstance(result, float) and np.isnan(result)) else 0.0
 
 
 def normalizedShannonWiener(df):
-    return shannonWienerIndex(df) / np.log(df.height)
+    if df.height <= 1:
+        return 0.0
+    result = shannonWienerIndex(df) / np.log(df.height)
+    return result
 
 
 def inverseSimpson(df):
-    return 1 / (df['fraction'] * df['fraction']).sum()
+    denominator = (df['fraction'] * df['fraction']).sum()
+    if denominator == 0:
+        return 0.0
+    result = 1 / denominator
+    return result if not (isinstance(result, float) and np.isnan(result)) else 0.0
 
 
 def giniSimpson(df):
-    return 1 - (df['fraction'] * df['fraction']).sum()
+    if df.is_empty():
+        return 0.0
+    result = 1 - (df['fraction'] * df['fraction']).sum()
+    return result if not (isinstance(result, float) and np.isnan(result)) else 0.0
 
 
 def giniIndex(df):
@@ -173,7 +206,8 @@ def giniIndex(df):
         return 0.0
     index = np.arange(1, n + 1)
     # Gini coefficient formula
-    return (2 * np.sum(index * fractions)) / (n * np.sum(fractions)) - ((n + 1) / n)
+    result = (2 * np.sum(index * fractions)) / (n * np.sum(fractions)) - ((n + 1) / n)
+    return result if not (isinstance(result, float) and np.isnan(result)) else 0.0
 
 
 def calculateMetric(type, df):
@@ -202,26 +236,47 @@ def calculateMetric(type, df):
 
 
 all_results = []
-for sampleId_tuple, df in data.group_by('sampleId'):
-    sampleId = sampleId_tuple[0] if isinstance(
-        sampleId_tuple, tuple) else sampleId_tuple
-    sample_results = {'sampleId': sampleId}
-    for index, metric in enumerate(params):
-        metric_id = "d-" + str(index)
-        downsampled = downsample(df, metric["downsampling"])
 
-        value = 0.0
-        if not downsampled.is_empty():
-            total_count = downsampled['count'].sum()
-            if total_count > 0:
-                downsampled = downsampled.with_columns(
-                    (pl.col('count') / total_count).alias('fraction'))
-                metric_value = calculateMetric(metric["type"], downsampled)
-                value = float(
-                    metric_value) if metric_value is not None else 0.0
+# Handle empty data - create empty result with proper structure
+if data.is_empty():
+    # Create empty result with sampleId and all metric columns
+    schema = {'sampleId': pl.String}
+    for index in range(len(params)):
+        schema[f"d-{index}"] = pl.Float64
+    result = pl.DataFrame(schema=schema)
+else:
+    for sampleId_tuple, df in data.group_by('sampleId'):
+        sampleId = sampleId_tuple[0] if isinstance(
+            sampleId_tuple, tuple) else sampleId_tuple
+        sample_results = {'sampleId': sampleId}
+        for index, metric in enumerate(params):
+            metric_id = "d-" + str(index)
+            downsampled = downsample(df, metric["downsampling"])
 
-        sample_results[metric_id] = value
-    all_results.append(sample_results)
+            value = 0.0
+            if not downsampled.is_empty():
+                total_count = downsampled['count'].sum()
+                if total_count > 0:
+                    downsampled = downsampled.with_columns(
+                        (pl.col('count') / total_count).alias('fraction'))
+                    metric_value = calculateMetric(metric["type"], downsampled)
+                    if metric_value is not None:
+                        value = float(metric_value)
+                        # Replace NaN with 0
+                        if isinstance(value, float) and np.isnan(value):
+                            value = 0.0
 
-result = pl.DataFrame(all_results)
+            sample_results[metric_id] = value
+        all_results.append(sample_results)
+
+    result = pl.DataFrame(all_results)
+
+# Ensure all values are properly typed and NaN values are replaced with 0
+if not result.is_empty():
+    for col in result.columns:
+        if col != 'sampleId':
+            result = result.with_columns(
+                pl.col(col).fill_nan(0.0).fill_null(0.0)
+            )
+
 result.write_csv('result.tsv', separator='\t')

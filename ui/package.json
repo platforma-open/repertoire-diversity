@@ -16,7 +16,8 @@
     "@platforma-sdk/model": "catalog:",
     "@types/lodash.debounce": "^4.0.9",
     "lodash.debounce": "^4.0.8",
-    "vue": "catalog:"
+    "vue": "catalog:",
+    "@vueuse/core": "catalog:"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "catalog:",
