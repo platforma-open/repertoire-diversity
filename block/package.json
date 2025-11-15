@@ -27,9 +27,9 @@
       "title": "Repertoire Diversity Analysis",
       "logo": "file:../logos/block-logo.png",
       "url": "https://github.com/platforma-open/repertoire-diversity",
-      "docs": "https://github.com/platforma-open/repertoire-diversity",
+      "docs": "https://docs.platforma.bio/guides/vdj-analysis/diversity-analysis/",
       "support": "mailto:support@milaboratories.com",
-      "description": "Calculate major immune repertoire diversity indices.",
+      "description": "Calculates immune repertoire diversity metrics including richness estimators (Chao1, Efron-Thisted), evenness indices (Shannon-Wiener, Inverse Simpson), and dominance measures (D50, Gini) to characterize T-cell and B-cell receptor diversity.",
       "longDescription": "file:../docs/description.md",
       "changelog": "file:./CHANGELOG.md",
       "tags": [
