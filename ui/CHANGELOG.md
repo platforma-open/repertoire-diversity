@@ -1,5 +1,13 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.6.1
+
+### Patch Changes
+
+- 63c4b69: technical release
+- Updated dependencies [63c4b69]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.5.4
+
 ## 1.6.0
 
 ### Minor Changes

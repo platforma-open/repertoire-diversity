@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.model
 
+## 1.5.4
+
+### Patch Changes
+
+- 63c4b69: technical release
+
 ## 1.5.3
 
 ### Patch Changes
