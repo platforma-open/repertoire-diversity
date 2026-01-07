@@ -116,7 +116,7 @@ export const model = BlockModel.create()
     ]),
   )
 
-  .output('pt', (ctx) => {
+  .outputWithStatus('pt', (ctx) => {
     const pCols = ctx.outputs?.resolve('pf')?.getPColumns();
     if (pCols === undefined) {
       return undefined;
@@ -125,7 +125,7 @@ export const model = BlockModel.create()
     return createPlDataTableV2(ctx, pCols, ctx.uiState.tableState);
   })
 
-  .output('pf', (ctx) => {
+  .outputWithStatus('pf', (ctx) => {
     const pCols = ctx.outputs?.resolve('pf')?.getPColumns();
     if (pCols === undefined) {
       return undefined;

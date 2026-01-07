@@ -38,7 +38,8 @@ const addMetric = () => {
 
 const isEmpty = asyncComputed(async () => {
   if (app.model.outputs.pt === undefined) return undefined;
-  return (await getRawPlatformaInstance().pFrameDriver.getShape(app.model.outputs.pt.visibleTableHandle)).rows === 0;
+  if (!app.model.outputs.pt.ok) return undefined;
+  return (await getRawPlatformaInstance().pFrameDriver.getShape(app.model.outputs.pt.value.visibleTableHandle)).rows === 0;
 });
 </script>
 

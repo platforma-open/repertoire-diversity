@@ -1,11 +1,5 @@
 {
-  "files": [],
-  "references": [
-    {
-      "path": "./tsconfig.app.json"
-    },
-    {
-      "path": "./tsconfig.node.json"
-    }
-  ]
+  "extends": "@milaboratories/ts-configs/block/ui",
+  "include": ["src/**/*", "index.html"],
+  "exclude": ["node_modules", "dist"]
 }
