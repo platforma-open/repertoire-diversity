@@ -1,5 +1,13 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.workflow
 
+## 1.6.3
+
+### Patch Changes
+
+- d157baf: Show running state for tables and graphs, migrate to new project template
+- Updated dependencies [d157baf]
+  - @platforma-open/milaboratories.repertoire-diversity-2.software@1.5.2
+
 ## 1.6.2
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.software
 
+## 1.5.2
+
+### Patch Changes
+
+- d157baf: Show running state for tables and graphs, migrate to new project template
+
 ## 1.5.1
 
 ### Patch Changes
