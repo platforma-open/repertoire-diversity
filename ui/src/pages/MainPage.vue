@@ -7,7 +7,6 @@ import SettingsModal from './SettingsModal.vue';
 const app = useApp();
 
 const tableSettings = usePlDataTableSettingsV2({
-  sourceId: () => app.model.args.abundanceRef,
   model: () => app.model.outputs.pt,
 });
 
