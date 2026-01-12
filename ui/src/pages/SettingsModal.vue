@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PlRef } from '@platforma-sdk/model';
-import { plRefsEqual, getRawPlatformaInstance } from '@platforma-sdk/model';
+import { getRawPlatformaInstance } from '@platforma-sdk/model';
 import { PlBtnSecondary, PlDropdownRef, PlElementList, PlSlideModal, PlAlert } from '@platforma-sdk/ui-vue';
 import { asyncComputed } from '@vueuse/core';
 import { useApp } from '../app';
@@ -11,11 +11,6 @@ const app = useApp();
 
 function setAbundanceRef(abundanceRef?: PlRef) {
   app.model.args.abundanceRef = abundanceRef;
-  let label = '';
-  if (abundanceRef) {
-    label = app.model.outputs.abundanceOptions?.find((o) => plRefsEqual(o.ref, abundanceRef))?.label ?? '';
-  }
-  app.model.ui.blockTitle = 'Repertoire Diversity – ' + label;
 }
 
 const settingsAreShown = defineModel<boolean>({ required: true });

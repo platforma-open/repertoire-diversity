@@ -62,7 +62,7 @@ def downsample(df, downsampling):
         sorted_df = df.sort('count', descending=True)
 
         sorted_df = sorted_df.with_columns(
-            pl.col('count').cumsum().alias('cumsum'))
+            pl.col('count').cum_sum().alias('cumsum'))
         selected_rows = sorted_df.filter(pl.col('cumsum') <= target_count)
 
         # If no rows meet the criteria (rare case), take at least the top row

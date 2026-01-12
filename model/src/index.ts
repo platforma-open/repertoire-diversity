@@ -1,5 +1,5 @@
 import type { GraphMakerState } from '@milaboratories/graph-maker';
-import type { InferOutputsType, PColumnIdAndSpec, PlDataTableStateV2, PlRef } from '@platforma-sdk/model';
+import type { PColumnIdAndSpec, PlDataTableStateV2, PlRef } from '@platforma-sdk/model';
 import { BlockModel, createPFrameForGraphs, createPlDataTableStateV2, createPlDataTableV2 } from '@platforma-sdk/model';
 
 export * from './converters';
@@ -23,13 +23,14 @@ export type MetricUI = Metric & {
 };
 
 export type BlockArgs = {
+  defaultBlockLabel: string;
+  customBlockLabel: string;
   abundanceRef?: PlRef;
   metrics: Metric[];
 };
 
 export type UiState = {
   metrics: MetricUI[];
-  blockTitle: string;
   tableState: PlDataTableStateV2;
   graphState: GraphMakerState;
 };
@@ -37,10 +38,11 @@ export type UiState = {
 export const model = BlockModel.create()
   .withArgs<BlockArgs>({
     metrics: [],
+    defaultBlockLabel: '',
+    customBlockLabel: '',
   })
 
   .withUiState<UiState>({
-    blockTitle: 'Repertoire Diversity',
     graphState: {
       title: 'Repertoire Diversity',
       template: 'bar',
@@ -153,7 +155,9 @@ export const model = BlockModel.create()
 
   .output('isRunning', (ctx) => ctx.outputs?.getIsReadyOrError() === false)
 
-  .title((ctx) => ctx.uiState?.blockTitle ?? 'Repertoire Diversity')
+  .title(() => 'Repertoire Diversity')
+
+  .subtitle((ctx) => ctx.args.customBlockLabel || ctx.args.defaultBlockLabel)
 
   .sections((_) => [
     { type: 'link', href: '/', label: 'Main' },
@@ -161,5 +165,3 @@ export const model = BlockModel.create()
   ])
 
   .done(2);
-
-export type BlockOutputs = InferOutputsType<typeof model>;
