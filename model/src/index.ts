@@ -157,7 +157,7 @@ export const model = BlockModel.create()
 
   .title(() => 'Repertoire Diversity')
 
-  .subtitle((ctx) => ctx.args.customBlockLabel || ctx.args.defaultBlockLabel)
+  .subtitle((ctx) => ctx.args.customBlockLabel ?? ctx.args.defaultBlockLabel)
 
   .sections((_) => [
     { type: 'link', href: '/', label: 'Main' },

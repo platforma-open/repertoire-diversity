@@ -142,12 +142,7 @@ wf.body(func(args) {
 	)
 
 	// Determine custom label
-	customLabel := ""
-	if args.customBlockLabel && args.customBlockLabel != "" {
-		customLabel = args.customBlockLabel
-	} else if args.defaultBlockLabel && args.defaultBlockLabel != "" {
-		customLabel = args.defaultBlockLabel
-	}
+	customLabel := args.customBlockLabel || args.defaultBlockLabel
 	
 	pf := pframes.pFrameBuilder()
 	for id, v in result {
