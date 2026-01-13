@@ -42,9 +42,9 @@ getDownsamplingLabel := func(downsampling) {
 	if downsampling.type == "none" {
 		return base + "(none)"
 	}
-	
+
 	base += "(" + downsampling.type
-	
+
 	if downsampling.type == "hypergeometric" && downsampling.valueChooser {
 		base += " - " + downsampling.valueChooser
 		if downsampling.valueChooser == "fixed" && downsampling.n {
