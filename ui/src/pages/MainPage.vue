@@ -27,7 +27,9 @@ watchEffect(() => {
 </script>
 
 <template>
-  <PlBlockPage>
+  <PlBlockPage
+    title="Repertoire Diversity"
+  >
     <template #append>
       <PlBtnGhost @click.stop="showSettings">
         Settings
