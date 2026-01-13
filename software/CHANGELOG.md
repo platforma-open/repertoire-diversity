@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.software
 
+## 1.5.3
+
+### Patch Changes
+
+- c85fbd0: Custom block title support
+
 ## 1.5.2
 
 ### Patch Changes

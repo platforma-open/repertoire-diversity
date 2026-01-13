@@ -1,6 +1,6 @@
 {
   "name": "@platforma-open/milaboratories.repertoire-diversity-2.model",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Block model",
   "type": "module",
   "main": "./dist/index.cjs",
