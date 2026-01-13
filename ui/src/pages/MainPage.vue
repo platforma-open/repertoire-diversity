@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { plRefsEqual } from '@platforma-sdk/model';
 import { PlAgDataTableV2, PlBlockPage, PlBtnGhost, PlMaskIcon24, usePlDataTableSettingsV2 } from '@platforma-sdk/ui-vue';
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { useApp } from '../app';
 import SettingsModal from './SettingsModal.vue';
 
@@ -15,14 +16,18 @@ const showSettings = () => {
   settingsAreShown.value = true;
 };
 
+watchEffect(() => {
+  const abundanceRef = app.model.args.abundanceRef;
+  if (abundanceRef) {
+    app.model.args.defaultBlockLabel = app.model.outputs.abundanceOptions?.find((o) => plRefsEqual(o.ref, abundanceRef))?.label ?? '';
+  } else {
+    app.model.args.defaultBlockLabel = '';
+  }
+});
 </script>
 
 <template>
-  <PlBlockPage
-    v-model:subtitle="app.model.args.customBlockLabel"
-    :subtitle-placeholder="app.model.args.defaultBlockLabel"
-    title="Repertoire Diversity"
-  >
+  <PlBlockPage>
     <template #append>
       <PlBtnGhost @click.stop="showSettings">
         Settings

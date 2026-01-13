@@ -36,34 +36,25 @@ getLabel := func(mt) {
 	return mt;
 }
 
-getDownsamplingLabel := func(downsampling, customLabel) {
-	// Build the normalization part
-	normPart := "Norm: "
+getDownsamplingLabel := func(downsampling) {
+	base := "Diversity Downsampling "
 	
 	if downsampling.type == "none" {
-		normPart += "none"
-	} else {
-		normPart += downsampling.type
-		
-		if downsampling.type == "hypergeometric" && downsampling.valueChooser {
-			normPart += " - " + downsampling.valueChooser
-			if downsampling.valueChooser == "fixed" && downsampling.n {
-				normPart += " - " + string(downsampling.n)
-			}
+		return base + "(none)"
+	}
+
+	base += "(" + downsampling.type
+
+	if downsampling.type == "hypergeometric" && downsampling.valueChooser {
+		base += " - " + downsampling.valueChooser
+		if downsampling.valueChooser == "fixed" && downsampling.n {
+			base += " - " + string(downsampling.n)
 		}
+	} else if (downsampling.type == "top" || downsampling.type == "cumtop") && downsampling.n {
+		base += " - " + string(downsampling.n)
 	}
 	
-	// Add top/cumtop values if present
-	if (downsampling.type == "top" || downsampling.type == "cumtop") && downsampling.n {
-		normPart += " - " + string(downsampling.n)
-	}
-	
-	// Build final label
-	if customLabel && customLabel != "" {
-		return customLabel + " (" + normPart + ")"
-	} else {
-		return normPart
-	}
+	return base + ")"
 }
 
 getSpecs := func(abundanceSpec, metrics) {
@@ -141,9 +132,6 @@ wf.body(func(args) {
 		{ splitDataAndSpec: true, cpu: 1, mem: "32GiB" }
 	)
 
-	// Determine custom label
-	customLabel := args.customBlockLabel || args.defaultBlockLabel
-	
 	pf := pframes.pFrameBuilder()
 	for id, v in result {
 		if id != "sampleId" {
@@ -155,7 +143,7 @@ wf.body(func(args) {
 					type: "milaboratories.differential-repertoire-diversity",
 					id: blockId,
 					importance: 55, 
-					label: getDownsamplingLabel(downsampling, customLabel)
+					label: getDownsamplingLabel(downsampling)
 				}
 			)
 			
