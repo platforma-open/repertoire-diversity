@@ -1,5 +1,13 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.6.4
+
+### Patch Changes
+
+- 20e60a4: Set default block label
+- Updated dependencies [20e60a4]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.5.7
+
 ## 1.6.3
 
 ### Patch Changes

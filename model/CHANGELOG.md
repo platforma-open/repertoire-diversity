@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.model
 
+## 1.5.7
+
+### Patch Changes
+
+- 20e60a4: Set default block label
+
 ## 1.5.6
 
 ### Patch Changes
