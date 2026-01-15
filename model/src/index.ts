@@ -38,7 +38,7 @@ export type UiState = {
 export const model = BlockModel.create()
   .withArgs<BlockArgs>({
     metrics: [],
-    defaultBlockLabel: '',
+    defaultBlockLabel: 'Select abundance and metrics',
     customBlockLabel: '',
   })
 

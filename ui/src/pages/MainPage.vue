@@ -21,7 +21,7 @@ watchEffect(() => {
   if (abundanceRef) {
     app.model.args.defaultBlockLabel = app.model.outputs.abundanceOptions?.find((o) => plRefsEqual(o.ref, abundanceRef))?.label ?? '';
   } else {
-    app.model.args.defaultBlockLabel = '';
+    app.model.args.defaultBlockLabel = 'Select abundance and metrics';
   }
 });
 </script>
