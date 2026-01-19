@@ -2,15 +2,15 @@
 import type { PredefinedGraphOption } from '@milaboratories/graph-maker';
 import { GraphMaker } from '@milaboratories/graph-maker';
 import '@milaboratories/graph-maker/styles';
-import type { PColumnIdAndSpec } from '@platforma-sdk/model';
+import { type PColumnIdAndSpec, type PColumnSpec } from '@platforma-sdk/model';
 import { computed } from 'vue';
 import { useApp } from '../app';
 
 const app = useApp();
 
-const defaultOptions = computed((): PredefinedGraphOption<'discrete'>[] | undefined => {
+const defaultOptions = computed((): PredefinedGraphOption<'discrete'>[] | null => {
   if (!app.model.outputs.pcols)
-    return undefined;
+    return null;
 
   const pcols = app.model.outputs.pcols;
   function getIndex(name: string, pcols: PColumnIdAndSpec[]): number {
@@ -41,5 +41,6 @@ const defaultOptions = computed((): PredefinedGraphOption<'discrete'>[] | undefi
     chart-type="discrete"
     :p-frame="app.model.outputs.pf"
     :default-options="defaultOptions"
+    :data-column-predicate="(spec: PColumnSpec) => spec.name === 'pl7.app/diversity'"
   />
 </template>
