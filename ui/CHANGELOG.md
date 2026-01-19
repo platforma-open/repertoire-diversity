@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.6.5
+
+### Patch Changes
+
+- 08ea006: 'show more button' in graph-maker's data-mapping
+
 ## 1.6.4
 
 ### Patch Changes
