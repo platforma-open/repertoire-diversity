@@ -1,6 +1,6 @@
 {
   "name": "@platforma-open/milaboratories.repertoire-diversity-2.ui",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "type": "module",
   "scripts": {
     "build": "ts-builder build --target block-ui",

@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.6.6
+
+### Patch Changes
+
+- 8f000f8: Labels migration
+
 ## 1.6.5
 
 ### Patch Changes
