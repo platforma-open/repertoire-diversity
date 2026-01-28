@@ -1,6 +1,8 @@
 import type { GraphMakerState } from '@milaboratories/graph-maker';
 import type { PColumnIdAndSpec, PlDataTableStateV2, PlRef } from '@platforma-sdk/model';
 import { BlockModel, createPFrameForGraphs, createPlDataTableStateV2, createPlDataTableV2 } from '@platforma-sdk/model';
+import strings from '@milaboratories/strings';
+import { getDefaultBlockLabel } from './label';
 
 export * from './converters';
 
@@ -38,7 +40,7 @@ export type UiState = {
 export const model = BlockModel.create()
   .withArgs<BlockArgs>({
     metrics: [],
-    defaultBlockLabel: 'Select abundance and metrics',
+    defaultBlockLabel: getDefaultBlockLabel({}),
     customBlockLabel: '',
   })
 
@@ -160,8 +162,10 @@ export const model = BlockModel.create()
   .subtitle((ctx) => ctx.args.customBlockLabel || ctx.args.defaultBlockLabel)
 
   .sections((_) => [
-    { type: 'link', href: '/', label: 'Main' },
+    { type: 'link', href: '/', label: strings.titles.main },
     { type: 'link', href: '/diversityGraph', label: 'Diversity Graph' },
   ])
 
   .done(2);
+
+export { getDefaultBlockLabel } from './label';
