@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { plRefsEqual } from '@platforma-sdk/model';
+import strings from '@milaboratories/strings';
 import { PlAgDataTableV2, PlBlockPage, PlBtnGhost, PlMaskIcon24, usePlDataTableSettingsV2 } from '@platforma-sdk/ui-vue';
-import { ref, watchEffect } from 'vue';
+import { ref, watch } from 'vue';
 import { useApp } from '../app';
 import SettingsModal from './SettingsModal.vue';
 
@@ -11,19 +11,21 @@ const tableSettings = usePlDataTableSettingsV2({
   model: () => app.model.outputs.pt,
 });
 
-const settingsAreShown = ref(app.model.outputs.pt === undefined);
+const settingsAreShown = ref(app.model.args.abundanceRef === undefined);
 const showSettings = () => {
   settingsAreShown.value = true;
 };
 
-watchEffect(() => {
-  const abundanceRef = app.model.args.abundanceRef;
-  if (abundanceRef) {
-    app.model.args.defaultBlockLabel = app.model.outputs.abundanceOptions?.find((o) => plRefsEqual(o.ref, abundanceRef))?.label ?? '';
-  } else {
-    app.model.args.defaultBlockLabel = 'Select abundance and metrics';
-  }
-});
+// Auto-close settings panel when block starts running
+watch(
+  () => app.model.outputs.isRunning,
+  (isRunning, wasRunning) => {
+    // Close settings when block starts running (false -> true transition)
+    if (isRunning && !wasRunning) {
+      settingsAreShown.value = false;
+    }
+  },
+);
 </script>
 
 <template>
@@ -32,13 +34,19 @@ watchEffect(() => {
   >
     <template #append>
       <PlBtnGhost @click.stop="showSettings">
-        Settings
+        {{ strings.titles.settings }}
         <template #append>
           <PlMaskIcon24 name="settings" />
         </template>
       </PlBtnGhost>
     </template>
-    <PlAgDataTableV2 v-model="app.model.ui.tableState" :settings="tableSettings" show-export-button />
+    <PlAgDataTableV2
+      v-model="app.model.ui.tableState"
+      :settings="tableSettings"
+      :not-ready-text="strings.callToActions.configureSettingsAndRun"
+      :no-rows-text="strings.states.noDataAvailable"
+      show-export-button
+    />
   </PlBlockPage>
 
   <SettingsModal v-model="settingsAreShown" />

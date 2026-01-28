@@ -12,6 +12,7 @@
   "dependencies": {
     "@platforma-open/milaboratories.repertoire-diversity-2.model": "workspace:*",
     "@milaboratories/graph-maker": "catalog:",
+    "@milaboratories/strings": "catalog:",
     "@platforma-sdk/ui-vue": "catalog:",
     "@platforma-sdk/model": "catalog:",
     "@types/lodash.debounce": "^4.0.9",

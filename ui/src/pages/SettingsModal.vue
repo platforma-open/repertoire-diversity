@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import strings from '@milaboratories/strings';
 import type { PlRef } from '@platforma-sdk/model';
 import { getRawPlatformaInstance } from '@platforma-sdk/model';
 import { PlBtnSecondary, PlDropdownRef, PlElementList, PlSlideModal, PlAlert } from '@platforma-sdk/ui-vue';
@@ -40,7 +41,7 @@ const isEmpty = asyncComputed(async () => {
 
 <template>
   <PlSlideModal v-model="settingsAreShown">
-    <template #title>Settings</template>
+    <template #title>{{ strings.titles.settings }}</template>
     <PlDropdownRef
       v-model="app.model.args.abundanceRef" :options="app.model.outputs.abundanceOptions ?? []"
       label="Abundance"
