@@ -2,6 +2,7 @@
 import type { PredefinedGraphOption } from '@milaboratories/graph-maker';
 import { GraphMaker } from '@milaboratories/graph-maker';
 import '@milaboratories/graph-maker/styles';
+import strings from '@milaboratories/strings';
 import { type PColumnIdAndSpec, type PColumnSpec } from '@platforma-sdk/model';
 import { computed } from 'vue';
 import { useApp } from '../app';
@@ -42,5 +43,6 @@ const defaultOptions = computed((): PredefinedGraphOption<'discrete'>[] | null =
     :p-frame="app.model.outputs.pf"
     :default-options="defaultOptions"
     :data-column-predicate="(spec: PColumnSpec) => spec.name === 'pl7.app/diversity'"
+    :status-text="{ noPframe: { title: strings.callToActions.configureSettingsAndRun } }"
   />
 </template>
