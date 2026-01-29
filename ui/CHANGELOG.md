@@ -1,5 +1,13 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.6.7
+
+### Patch Changes
+
+- bc865e3: Improve block label generation
+- Updated dependencies [bc865e3]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.5.8
+
 ## 1.6.6
 
 ### Patch Changes
