@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 1.6.8
+
+### Patch Changes
+
+- 216f552: update graph-maker version
+
 ## 1.6.7
 
 ### Patch Changes
