@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2
 
+## 2.0.35
+
+### Patch Changes
+
+- 80689b6: SDK Update
+
 ## 2.0.34
 
 ### Patch Changes
