@@ -18,7 +18,7 @@ catalog:
   '@platforma-sdk/eslint-config': 1.2.0
   '@platforma-sdk/test': 1.53.4
   '@milaboratories/helpers': 1.13.0
-  '@milaboratories/graph-maker': 1.1.217
+  '@milaboratories/graph-maker': 1.1.218
   '@milaboratories/strings': 0.1.0
 
   # Runtime dependencies
