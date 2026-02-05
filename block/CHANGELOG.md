@@ -1,5 +1,14 @@
 # @platforma-open/milaboratories.repertoire-diversity-2
 
+## 2.0.36
+
+### Patch Changes
+
+- 7c6a978: update dependencies
+- Updated dependencies [7c6a978]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@1.5.9
+  - @platforma-open/milaboratories.repertoire-diversity-2.ui@1.6.9
+
 ## 2.0.35
 
 ### Patch Changes
