@@ -18,14 +18,15 @@
   "scripts": {
     "build": "ts-builder build --target block-model && block-tools build-model",
     "watch": "ts-builder build --target block-model --watch",
-    "type-check": "ts-builder types --target block-model",
+    "type-check": "ts-builder type-check --target block-model",
     "lint": "eslint .",
     "test": "vitest"
   },
   "dependencies": {
     "@platforma-sdk/model": "catalog:",
     "@milaboratories/graph-maker": "catalog:",
-    "@milaboratories/strings": "catalog:"
+    "@milaboratories/strings": "catalog:",
+    "@milaboratories/helpers": "catalog:"
   },
   "devDependencies": {
     "@milaboratories/ts-builder": "catalog:",
