@@ -46,7 +46,7 @@ export const model = BlockModel.create()
 
   .withUiState<UiState>({
     graphState: {
-      title: 'Repertoire Diversity',
+      title: 'Sequence Diversity',
       template: 'bar',
       currentTab: null,
     },
@@ -157,7 +157,7 @@ export const model = BlockModel.create()
 
   .output('isRunning', (ctx) => ctx.outputs?.getIsReadyOrError() === false)
 
-  .title(() => 'Repertoire Diversity')
+  .title(() => 'Sequence Diversity')
 
   .subtitle((ctx) => ctx.args.customBlockLabel || ctx.args.defaultBlockLabel)
 

@@ -36,7 +36,7 @@ const props = defineModel<Metric>({ default: {
   <PlNumberField
     v-if="props.downsampling.type === 'cumtop'"
     v-model="props.downsampling.n"
-    label="Select % of the repertoire to include"
+    label="Top % to include"
     :minValue="0"
     :maxValue="100"
     :step="1"

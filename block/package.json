@@ -24,18 +24,19 @@
       "ui": "@platforma-open/milaboratories.repertoire-diversity-2.ui/dist"
     },
     "meta": {
-      "title": "Repertoire Diversity Analysis",
+      "title": "Sequence Diversity Analysis",
       "logo": "file:../logos/block-logo.png",
       "url": "https://github.com/platforma-open/repertoire-diversity",
       "docs": "https://docs.platforma.bio/guides/vdj-analysis/diversity-analysis/",
       "support": "mailto:support@milaboratories.com",
-      "description": "Calculates immune repertoire diversity metrics including richness estimators (Chao1, Efron-Thisted), evenness indices (Shannon-Wiener, Inverse Simpson), and dominance measures (D50, Gini) to characterize T-cell and B-cell receptor diversity.",
+      "description": "Calculates diversity metrics — richness estimators (Chao1, Efron-Thisted), evenness indices (Shannon-Wiener, Inverse Simpson), and dominance measures (D50, Gini) — to characterize clonotype or peptide library composition across samples.",
       "longDescription": "file:../docs/description.md",
       "changelog": "file:./CHANGELOG.md",
       "tags": [
         "airr",
         "downstream",
-        "repertoire"
+        "repertoire",
+        "peptide"
       ],
       "organization": {
         "name": "MiLaboratories Inc",
