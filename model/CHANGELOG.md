@@ -1,5 +1,12 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.model
 
+## 2.0.0
+
+### Major Changes
+
+- a96467f: Support peptides
+- be69712: Support peptides
+
 ## 1.5.9
 
 ### Patch Changes
