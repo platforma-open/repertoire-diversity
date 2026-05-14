@@ -30,7 +30,7 @@ watch(
 
 <template>
   <PlBlockPage
-    title="Repertoire Diversity"
+    title="Sequence Diversity"
   >
     <template #append>
       <PlBtnGhost @click.stop="showSettings">

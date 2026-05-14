@@ -1,8 +1,9 @@
 import type { GraphMakerState } from '@milaboratories/graph-maker';
+import strings from '@milaboratories/strings';
 import type { PColumnIdAndSpec, PlDataTableStateV2, PlRef } from '@platforma-sdk/model';
 import { BlockModel, createPFrameForGraphs, createPlDataTableStateV2, createPlDataTableV2 } from '@platforma-sdk/model';
-import strings from '@milaboratories/strings';
 import { getDefaultBlockLabel } from './label';
+export type * from '@milaboratories/helpers';
 
 export * from './converters';
 
@@ -46,7 +47,7 @@ export const model = BlockModel.create()
 
   .withUiState<UiState>({
     graphState: {
-      title: 'Repertoire Diversity',
+      title: 'Sequence Diversity',
       template: 'bar',
       currentTab: null,
     },
@@ -157,7 +158,7 @@ export const model = BlockModel.create()
 
   .output('isRunning', (ctx) => ctx.outputs?.getIsReadyOrError() === false)
 
-  .title(() => 'Repertoire Diversity')
+  .title(() => 'Sequence Diversity')
 
   .subtitle((ctx) => ctx.args.customBlockLabel || ctx.args.defaultBlockLabel)
 
