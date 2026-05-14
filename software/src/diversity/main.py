@@ -279,4 +279,7 @@ if not result.is_empty():
                 pl.col(col).fill_nan(0.0).fill_null(0.0)
             )
 
+# Sort by sampleId so output bytes are deterministic across runs (avoids CID conflicts).
+result = result.sort('sampleId')
+
 result.write_csv('result.tsv', separator='\t')
