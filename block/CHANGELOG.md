@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2
 
+## 3.0.1
+
+### Patch Changes
+
+- 453cb59: Rename block
+
 ## 3.0.0
 
 ### Major Changes
