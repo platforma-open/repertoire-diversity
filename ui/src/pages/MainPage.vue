@@ -1,9 +1,15 @@
 <script setup lang="ts">
-import strings from '@milaboratories/strings';
-import { PlAgDataTableV2, PlBlockPage, PlBtnGhost, PlMaskIcon24, usePlDataTableSettingsV2 } from '@platforma-sdk/ui-vue';
-import { ref, watch } from 'vue';
-import { useApp } from '../app';
-import SettingsModal from './SettingsModal.vue';
+import strings from "@milaboratories/strings";
+import {
+  PlAgDataTableV2,
+  PlBlockPage,
+  PlBtnGhost,
+  PlMaskIcon24,
+  usePlDataTableSettingsV2,
+} from "@platforma-sdk/ui-vue";
+import { ref, watch } from "vue";
+import { useApp } from "../app";
+import SettingsModal from "./SettingsModal.vue";
 
 const app = useApp();
 
@@ -29,9 +35,7 @@ watch(
 </script>
 
 <template>
-  <PlBlockPage
-    title="Sequence Diversity"
-  >
+  <PlBlockPage title="Sequence Diversity">
     <template #append>
       <PlBtnGhost @click.stop="showSettings">
         {{ strings.titles.settings }}

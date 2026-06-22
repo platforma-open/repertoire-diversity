@@ -1,21 +1,33 @@
-import type { GraphMakerState } from '@milaboratories/graph-maker';
-import strings from '@milaboratories/strings';
-import type { PColumnIdAndSpec, PlDataTableStateV2, PlRef } from '@platforma-sdk/model';
-import { BlockModel, createPFrameForGraphs, createPlDataTableStateV2, createPlDataTableV2 } from '@platforma-sdk/model';
-import { getDefaultBlockLabel } from './label';
-export type * from '@milaboratories/helpers';
+import type { GraphMakerState } from "@milaboratories/graph-maker";
+import strings from "@milaboratories/strings";
+import type { PColumnIdAndSpec, PlDataTableStateV2, PlRef } from "@platforma-sdk/model";
+import {
+  BlockModel,
+  createPFrameForGraphs,
+  createPlDataTableStateV2,
+  createPlDataTableV2,
+} from "@platforma-sdk/model";
+import { getDefaultBlockLabel } from "./label";
+export type * from "@milaboratories/helpers";
 
-export * from './converters';
+export * from "./converters";
 
-export type DiversityType = 'chao1' | 'd50' | 'efronThisted' |
-  'observed' | 'shannonWienerIndex' | 'shannonWiener' |
-  'normalizedShannonWiener' | 'inverseSimpson' | 'gini';
+export type DiversityType =
+  | "chao1"
+  | "d50"
+  | "efronThisted"
+  | "observed"
+  | "shannonWienerIndex"
+  | "shannonWiener"
+  | "normalizedShannonWiener"
+  | "inverseSimpson"
+  | "gini";
 
 export type Metric = {
   type: DiversityType | undefined;
   downsampling: {
-    type?: 'none' | 'top' | 'cumtop' | 'hypergeometric' ;
-    valueChooser?: 'min' | 'fixed' | 'max' | 'auto';
+    type?: "none" | "top" | "cumtop" | "hypergeometric";
+    valueChooser?: "min" | "fixed" | "max" | "auto";
     n?: number;
   };
 };
@@ -42,13 +54,13 @@ export const model = BlockModel.create()
   .withArgs<BlockArgs>({
     metrics: [],
     defaultBlockLabel: getDefaultBlockLabel({}),
-    customBlockLabel: '',
+    customBlockLabel: "",
   })
 
   .withUiState<UiState>({
     graphState: {
-      title: 'Sequence Diversity',
-      template: 'bar',
+      title: "Sequence Diversity",
+      template: "bar",
       currentTab: null,
     },
 
@@ -56,73 +68,77 @@ export const model = BlockModel.create()
 
     metrics: [
       {
-        id: 'observed',
-        type: 'observed',
+        id: "observed",
+        type: "observed",
         downsampling: {
-          type: 'hypergeometric',
-          valueChooser: 'auto',
+          type: "hypergeometric",
+          valueChooser: "auto",
         },
         isExpanded: false,
       },
       {
-        id: 'shannonWiener',
-        type: 'shannonWiener',
+        id: "shannonWiener",
+        type: "shannonWiener",
         downsampling: {
-          type: 'hypergeometric',
-          valueChooser: 'auto',
+          type: "hypergeometric",
+          valueChooser: "auto",
         },
         isExpanded: false,
       },
       {
-        id: 'chao1',
-        type: 'chao1',
+        id: "chao1",
+        type: "chao1",
         downsampling: {
-          type: 'hypergeometric',
-          valueChooser: 'auto',
+          type: "hypergeometric",
+          valueChooser: "auto",
         },
         isExpanded: false,
       },
       {
-        id: 'gini',
-        type: 'gini',
+        id: "gini",
+        type: "gini",
         downsampling: {
-          type: 'hypergeometric',
-          valueChooser: 'auto',
+          type: "hypergeometric",
+          valueChooser: "auto",
         },
         isExpanded: false,
       },
       {
-        id: 'd50',
-        type: 'd50',
+        id: "d50",
+        type: "d50",
         downsampling: {
-          type: 'hypergeometric',
-          valueChooser: 'auto',
+          type: "hypergeometric",
+          valueChooser: "auto",
         },
         isExpanded: false,
       },
     ],
   })
 
-  .argsValid((ctx) => ctx.args.abundanceRef !== undefined
-    && ctx.args.metrics.every((metric) => metric.type !== undefined))
-
-  .output('abundanceOptions', (ctx) =>
-    ctx.resultPool.getOptions([{
-      axes: [
-        { name: 'pl7.app/sampleId' },
-        { },
-      ],
-      annotations: {
-        'pl7.app/isAbundance': 'true',
-        'pl7.app/abundance/normalized': 'false',
-        'pl7.app/abundance/isPrimary': 'true',
-      },
-    },
-    ], { includeNativeLabel: true }),
+  .argsValid(
+    (ctx) =>
+      ctx.args.abundanceRef !== undefined &&
+      ctx.args.metrics.every((metric) => metric.type !== undefined),
   )
 
-  .outputWithStatus('pt', (ctx) => {
-    const pCols = ctx.outputs?.resolve('pf')?.getPColumns();
+  .output("abundanceOptions", (ctx) =>
+    ctx.resultPool.getOptions(
+      [
+        {
+          axes: [{ name: "pl7.app/sampleId" }, {}],
+          annotations: {
+            "pl7.app/isAbundance": "true",
+            "pl7.app/abundance/normalized": "false",
+            "pl7.app/abundance/isPrimary": "true",
+          },
+        },
+      ],
+      { includeNativeLabel: true },
+    ),
+  )
+
+  .outputWithStatus("pt", (ctx) => {
+    const pCols = ctx.outputs?.resolve("pf")?.getPColumns();
     if (pCols === undefined) {
       return undefined;
     }
@@ -130,8 +146,8 @@ export const model = BlockModel.create()
     return createPlDataTableV2(ctx, pCols, ctx.uiState.tableState);
   })
 
-  .outputWithStatus('pf', (ctx) => {
-    const pCols = ctx.outputs?.resolve('pf')?.getPColumns();
+  .outputWithStatus("pf", (ctx) => {
+    const pCols = ctx.outputs?.resolve("pf")?.getPColumns();
     if (pCols === undefined) {
       return undefined;
     }
@@ -140,8 +156,8 @@ export const model = BlockModel.create()
   })
 
   // Return a list of Pcols for plot defaults
-  .output('pcols', (ctx) => {
-    const pCols = ctx.outputs?.resolve('pf')?.getPColumns();
+  .output("pcols", (ctx) => {
+    const pCols = ctx.outputs?.resolve("pf")?.getPColumns();
 
     if (pCols === undefined || pCols.length === 0) {
       return undefined;
@@ -152,21 +168,21 @@ export const model = BlockModel.create()
         ({
           columnId: c.id,
           spec: c.spec,
-        } satisfies PColumnIdAndSpec),
+        }) satisfies PColumnIdAndSpec,
     );
   })
 
-  .output('isRunning', (ctx) => ctx.outputs?.getIsReadyOrError() === false)
+  .output("isRunning", (ctx) => ctx.outputs?.getIsReadyOrError() === false)
 
-  .title(() => 'Sequence Diversity')
+  .title(() => "Sequence Diversity")
 
   .subtitle((ctx) => ctx.args.customBlockLabel || ctx.args.defaultBlockLabel)
 
   .sections((_) => [
-    { type: 'link', href: '/', label: strings.titles.main },
-    { type: 'link', href: '/diversityGraph', label: 'Diversity Graph' },
+    { type: "link", href: "/", label: strings.titles.main },
+    { type: "link", href: "/diversityGraph", label: "Diversity Graph" },
   ])
 
   .done(2);
 
-export { getDefaultBlockLabel } from './label';
+export { getDefaultBlockLabel } from "./label";
