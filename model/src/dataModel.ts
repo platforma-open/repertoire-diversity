@@ -48,7 +48,14 @@ export const blockDataModel = new DataModelBuilder()
   // MetricUI[] and view state under `uiState`. Fold both into unified `data`.
   .upgradeLegacy<LegacyBlockArgs, LegacyUiState>(({ args, uiState }) => ({
     abundanceRef: args?.abundanceRef,
-    metrics: uiState?.metrics ?? defaultMetrics(),
+    // uiState.metrics (MetricUI[]) is V1's source of truth. If it is somehow
+    // absent, recover the user's set from the projected args.metrics rather
+    // than silently dropping to defaults; only seed defaults when neither exists.
+    metrics:
+      uiState?.metrics ??
+      (args?.metrics?.length
+        ? args.metrics.map((metric, i) => ({ ...metric, id: `metric-${i}`, isExpanded: false }))
+        : defaultMetrics()),
     defaultBlockLabel: args?.defaultBlockLabel ?? getDefaultBlockLabel({}),
     customBlockLabel: args?.customBlockLabel ?? "",
     tableState: uiState?.tableState ?? createPlDataTableStateV2(),
