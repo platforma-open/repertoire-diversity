@@ -17,7 +17,7 @@ const tableSettings = usePlDataTableSettingsV2({
   model: () => app.model.outputs.pt,
 });
 
-const settingsAreShown = ref(app.model.args.abundanceRef === undefined);
+const settingsAreShown = ref(app.model.data.abundanceRef === undefined);
 const showSettings = () => {
   settingsAreShown.value = true;
 };
@@ -45,7 +45,7 @@ watch(
       </PlBtnGhost>
     </template>
     <PlAgDataTableV2
-      v-model="app.model.ui.tableState"
+      v-model="app.model.data.tableState"
       :settings="tableSettings"
       :not-ready-text="strings.callToActions.configureSettingsAndRun"
       :no-rows-text="strings.states.noDataAvailable"

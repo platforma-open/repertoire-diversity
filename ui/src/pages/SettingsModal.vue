@@ -17,7 +17,7 @@ import { getMetricLabel } from "./util";
 const app = useApp();
 
 function setAbundanceRef(abundanceRef?: PlRef) {
-  app.model.args.abundanceRef = abundanceRef;
+  app.model.data.abundanceRef = abundanceRef;
 }
 
 const settingsAreShown = defineModel<boolean>({ required: true });
@@ -27,7 +27,7 @@ const generateUniqueId = () => {
 };
 
 const addMetric = () => {
-  app.model.ui.metrics?.push({
+  app.model.data.metrics?.push({
     id: generateUniqueId(),
     type: undefined,
     downsampling: {
@@ -41,13 +41,9 @@ const addMetric = () => {
 const isEmpty = asyncComputed(async () => {
   if (app.model.outputs.pt === undefined) return undefined;
   if (!app.model.outputs.pt.ok) return undefined;
-  return (
-    (
-      await getRawPlatformaInstance().pFrameDriver.getShape(
-        app.model.outputs.pt.value.visibleTableHandle,
-      )
-    ).rows === 0
-  );
+  const handle = app.model.outputs.pt.value.visibleTableHandle;
+  if (handle === undefined) return undefined;
+  return (await getRawPlatformaInstance().pFrameDriver.getShape(handle)).rows === 0;
 });
 </script>
 
@@ -55,7 +51,7 @@ const isEmpty = asyncComputed(async () => {
   <PlSlideModal v-model="settingsAreShown">
     <template #title>{{ strings.titles.settings }}</template>
     <PlDropdownRef
-      v-model="app.model.args.abundanceRef"
+      v-model="app.model.data.abundanceRef"
       :options="app.model.outputs.abundanceOptions ?? []"
       label="Abundance"
       required
@@ -68,7 +64,7 @@ const isEmpty = asyncComputed(async () => {
     </PlAlert>
 
     <PlElementList
-      v-model:items="app.model.ui.metrics"
+      v-model:items="app.model.data.metrics"
       :get-item-key="(item) => item.id"
       :is-expanded="(item) => item.isExpanded === true"
       :on-expand="(item) => (item.isExpanded = !item.isExpanded)"
@@ -78,7 +74,7 @@ const isEmpty = asyncComputed(async () => {
         {{ item.type ? getMetricLabel(item.type) : "New Metric" }}
       </template>
       <template #item-content="{ index }">
-        <DiversityCard v-model="app.model.ui.metrics[index]" />
+        <DiversityCard v-model="app.model.data.metrics[index]" />
       </template>
     </PlElementList>
 

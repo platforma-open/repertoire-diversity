@@ -1,125 +1,24 @@
-import type { GraphMakerState } from "@milaboratories/graph-maker";
 import strings from "@milaboratories/strings";
-import type { PColumnIdAndSpec, PlDataTableStateV2, PlRef } from "@platforma-sdk/model";
-import {
-  BlockModel,
-  createPFrameForGraphs,
-  createPlDataTableStateV2,
-  createPlDataTableV2,
-} from "@platforma-sdk/model";
-import { getDefaultBlockLabel } from "./label";
+import type { InferOutputsType, PColumnIdAndSpec } from "@platforma-sdk/model";
+import { BlockModelV3, createPFrameForGraphs, createPlDataTableV2 } from "@platforma-sdk/model";
+import { convertMetricsUiToArgs } from "./converters";
+import { blockDataModel } from "./dataModel";
+import type { BlockArgs } from "./types";
+
 export type * from "@milaboratories/helpers";
-
 export * from "./converters";
+export * from "./types";
+export { blockDataModel } from "./dataModel";
+export { getDefaultBlockLabel } from "./label";
 
-export type DiversityType =
-  | "chao1"
-  | "d50"
-  | "efronThisted"
-  | "observed"
-  | "shannonWienerIndex"
-  | "shannonWiener"
-  | "normalizedShannonWiener"
-  | "inverseSimpson"
-  | "gini";
-
-export type Metric = {
-  type: DiversityType | undefined;
-  downsampling: {
-    type?: "none" | "top" | "cumtop" | "hypergeometric";
-    valueChooser?: "min" | "fixed" | "max" | "auto";
-    n?: number;
-  };
-};
-
-export type MetricUI = Metric & {
-  id: string;
-  isExpanded?: boolean;
-};
-
-export type BlockArgs = {
-  defaultBlockLabel: string;
-  customBlockLabel: string;
-  abundanceRef?: PlRef;
-  metrics: Metric[];
-};
-
-export type UiState = {
-  metrics: MetricUI[];
-  tableState: PlDataTableStateV2;
-  graphState: GraphMakerState;
-};
-
-export const model = BlockModel.create()
-  .withArgs<BlockArgs>({
-    metrics: [],
-    defaultBlockLabel: getDefaultBlockLabel({}),
-    customBlockLabel: "",
+export const platforma = BlockModelV3.create(blockDataModel)
+  .args<BlockArgs>((data) => {
+    if (data.abundanceRef === undefined) throw new Error("Abundance column is required");
+    const metrics = convertMetricsUiToArgs(data.metrics);
+    if (metrics.some((metric) => metric.type === undefined))
+      throw new Error("Each metric requires a type");
+    return { abundanceRef: data.abundanceRef, metrics };
   })
-
-  .withUiState<UiState>({
-    graphState: {
-      title: "Sequence Diversity",
-      template: "bar",
-      currentTab: null,
-    },
-
-    tableState: createPlDataTableStateV2(),
-
-    metrics: [
-      {
-        id: "observed",
-        type: "observed",
-        downsampling: {
-          type: "hypergeometric",
-          valueChooser: "auto",
-        },
-        isExpanded: false,
-      },
-      {
-        id: "shannonWiener",
-        type: "shannonWiener",
-        downsampling: {
-          type: "hypergeometric",
-          valueChooser: "auto",
-        },
-        isExpanded: false,
-      },
-      {
-        id: "chao1",
-        type: "chao1",
-        downsampling: {
-          type: "hypergeometric",
-          valueChooser: "auto",
-        },
-        isExpanded: false,
-      },
-      {
-        id: "gini",
-        type: "gini",
-        downsampling: {
-          type: "hypergeometric",
-          valueChooser: "auto",
-        },
-        isExpanded: false,
-      },
-      {
-        id: "d50",
-        type: "d50",
-        downsampling: {
-          type: "hypergeometric",
-          valueChooser: "auto",
-        },
-        isExpanded: false,
-      },
-    ],
-  })
-
-  .argsValid(
-    (ctx) =>
-      ctx.args.abundanceRef !== undefined &&
-      ctx.args.metrics.every((metric) => metric.type !== undefined),
-  )
 
   .output("abundanceOptions", (ctx) =>
     ctx.resultPool.getOptions(
@@ -143,7 +42,7 @@ export const model = BlockModel.create()
       return undefined;
     }
 
-    return createPlDataTableV2(ctx, pCols, ctx.uiState.tableState);
+    return createPlDataTableV2(ctx, pCols, ctx.data.tableState);
   })
 
   .outputWithStatus("pf", (ctx) => {
@@ -176,13 +75,14 @@ export const model = BlockModel.create()
 
   .title(() => "Sequence Diversity")
 
-  .subtitle((ctx) => ctx.args.customBlockLabel || ctx.args.defaultBlockLabel)
+  .subtitle((ctx) => ctx.data.customBlockLabel || ctx.data.defaultBlockLabel)
 
-  .sections((_) => [
-    { type: "link", href: "/", label: strings.titles.main },
-    { type: "link", href: "/diversityGraph", label: "Diversity Graph" },
+  .sections(() => [
+    { type: "link" as const, href: "/" as const, label: strings.titles.main },
+    { type: "link" as const, href: "/diversityGraph" as const, label: "Diversity Graph" },
   ])
 
-  .done(2);
+  .done();
 
-export { getDefaultBlockLabel } from "./label";
+export type Platforma = typeof platforma;
+export type BlockOutputs = InferOutputsType<typeof platforma>;

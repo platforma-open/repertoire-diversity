@@ -32,7 +32,7 @@ const defaultOptions = computed((): PredefinedGraphOption<"discrete">[] | null =
 
 <template>
   <GraphMaker
-    v-model="app.model.ui.graphState"
+    v-model="app.model.data.graphState"
     chart-type="discrete"
     :p-frame="app.model.outputs.pf"
     :default-options="defaultOptions"
