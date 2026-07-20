@@ -1,34 +1,32 @@
 <script setup lang="ts">
-import type { Metric } from '@platforma-open/milaboratories.repertoire-diversity-2.model';
-import type { ListOption } from '@platforma-sdk/ui-vue';
-import { PlBtnGroup, PlDropdown, PlNumberField } from '@platforma-sdk/ui-vue';
-import { metricTypeOptions } from './util';
+import type { Metric } from "@platforma-open/milaboratories.repertoire-diversity-2.model";
+import type { ListOption } from "@platforma-sdk/ui-vue";
+import { PlBtnGroup, PlDropdown, PlNumberField } from "@platforma-sdk/ui-vue";
+import { metricTypeOptions } from "./util";
 
 const downsamplingOptions: ListOption<string | undefined>[] = [
-  { label: 'None', value: 'none' },
-  { label: 'Top N', value: 'top' },
-  { label: 'Cumulative Top', value: 'cumtop' },
-  { label: 'Random Sampling', value: 'hypergeometric' },
+  { label: "None", value: "none" },
+  { label: "Top N", value: "top" },
+  { label: "Cumulative Top", value: "cumtop" },
+  { label: "Random Sampling", value: "hypergeometric" },
 ];
 
-const props = defineModel<Metric>({ default: {
-  type: undefined,
-  downsampling: {
-    type: 'none',
+const props = defineModel<Metric>({
+  default: {
+    type: undefined,
+    downsampling: {
+      type: "none",
+    },
   },
-} });
-
+});
 </script>
 
 <template>
-  <PlDropdown
-    v-model="props.type" :options="metricTypeOptions"
-    label="Type"
-    required
-  />
+  <PlDropdown v-model="props.type" :options="metricTypeOptions" label="Type" required />
 
   <PlDropdown
-    v-model="props.downsampling.type" :options="downsamplingOptions"
+    v-model="props.downsampling.type"
+    :options="downsamplingOptions"
     label="Downsampling"
     required
   />
@@ -56,14 +54,15 @@ const props = defineModel<Metric>({ default: {
     v-model="props.downsampling.valueChooser"
     :options="[
       { value: 'fixed', label: 'Fixed' },
-      { value: 'min', label: 'Min', },
-      { value: 'auto', label: 'Auto', },
+      { value: 'min', label: 'Min' },
+      { value: 'auto', label: 'Auto' },
     ]"
   />
 
   <PlNumberField
-    v-if="props.downsampling.valueChooser === 'fixed'
-      && props.downsampling.type === 'hypergeometric'"
+    v-if="
+      props.downsampling.valueChooser === 'fixed' && props.downsampling.type === 'hypergeometric'
+    "
     v-model="props.downsampling.n"
     label="Select N"
     :minValue="0"

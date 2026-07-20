@@ -1,14 +1,20 @@
 {
   "name": "@platforma-open/milaboratories.repertoire-diversity-2.software",
   "version": "2.0.0",
-  "type": "module",
   "description": "Block Software",
+  "files": [
+    "./dist/**/*"
+  ],
+  "type": "module",
   "scripts": {
-    "build": "pl-pkg build",
-    "prepublishOnly": "pl-pkg prepublish",
-    "do-pack": "shx rm -f *.tgz && pl-pkg build && pnpm pack && shx mv platforma-open*.tgz package.tgz",
+    "build": "block-tools software build",
+    "do-pack": "shx rm -f *.tgz && block-tools software build && pnpm pack && shx mv platforma-open*.tgz package.tgz",
     "changeset": "changeset",
     "version-packages": "changeset version"
+  },
+  "devDependencies": {
+    "@platforma-open/milaboratories.runenv-python-3": "catalog:",
+    "@platforma-sdk/block-tools": "catalog:"
   },
   "block-software": {
     "entrypoints": {
@@ -31,9 +37,5 @@
         }
       }
     }
-  },
-  "devDependencies": {
-    "@platforma-open/milaboratories.runenv-python-3": "catalog:",
-    "@platforma-sdk/package-builder": "catalog:"
   }
 }

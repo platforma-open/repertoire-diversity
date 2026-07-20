@@ -1,4 +1,4 @@
-import type { Metric, MetricUI } from './index';
+import type { Metric, MetricUI } from "./types";
 
 export const convertMetricsUiToArgs = (metrics: MetricUI[]): Metric[] => {
   return metrics.map((metric): Metric => {
