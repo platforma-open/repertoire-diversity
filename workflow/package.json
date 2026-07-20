@@ -1,6 +1,7 @@
 {
   "name": "@platforma-open/milaboratories.repertoire-diversity-2.workflow",
   "version": "2.0.0",
+  "private": true,
   "description": "Block Workflow",
   "type": "module",
   "scripts": {
