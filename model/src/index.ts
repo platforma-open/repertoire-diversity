@@ -101,18 +101,11 @@ export const platforma = BlockModelV3.create({ dataModel: blockDataModel, kind }
   .done();
 
 export type Platforma = typeof platforma;
-// The run gate for one metric's downsampling, mirroring exactly what
-// software/src/diversity/main.py reads: `top` and `cumtop` index `n`,
-// `hypergeometric` indexes `valueChooser` and then `n` when that is "fixed".
-// A key the analysis reads but the row never filled is a KeyError partway
-// through the run, so it is refused here, where the message reaches the user
-// while the row is still in front of them.
-//
-// This gate covers the template path too: init-params seed `data`, and `data`
-// goes through this lambda before any run. Which is why the check belongs here
-// and not in the kind's parser -- the parser validates the params envelope, and
-// making it stricter than the states the editor can reach would let the block
-// export a file its own kind refuses to apply.
+// The keys `software/src/diversity/main.py` indexes per downsampling mode:
+// `top` and `cumtop` read `n`; `hypergeometric` reads `valueChooser`, and `n`
+// too when that is "fixed". A key the row never filled is a KeyError partway
+// through the run, so it is refused here instead, while the row is still in
+// front of the user.
 function assertDownsamplingComplete(downsampling: Metric["downsampling"]) {
   switch (downsampling.type) {
     case undefined:
