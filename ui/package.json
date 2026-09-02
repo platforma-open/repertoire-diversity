@@ -14,6 +14,7 @@
   "dependencies": {
     "@milaboratories/graph-maker": "catalog:",
     "@milaboratories/strings": "catalog:",
+    "@platforma-open/milaboratories.repertoire-diversity-2.kind": "workspace:*",
     "@platforma-open/milaboratories.repertoire-diversity-2.model": "workspace:*",
     "@platforma-sdk/model": "catalog:",
     "@platforma-sdk/ui-vue": "catalog:",
