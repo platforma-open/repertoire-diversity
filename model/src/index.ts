@@ -1,6 +1,7 @@
 import strings from "@milaboratories/strings";
 import type { InferOutputsType, PColumnIdAndSpec } from "@platforma-sdk/model";
 import { BlockModelV3, createPFrameForGraphs, createPlDataTableV2 } from "@platforma-sdk/model";
+import type { Metric } from "@platforma-open/milaboratories.repertoire-diversity-2.kind";
 import { kind } from "@platforma-open/milaboratories.repertoire-diversity-2.kind";
 import { convertMetricsUiToArgs } from "./converters";
 import { blockDataModel } from "./dataModel";
@@ -16,8 +17,10 @@ export const platforma = BlockModelV3.create({ dataModel: blockDataModel, kind }
   .args<BlockArgs>((data) => {
     if (data.abundanceRef === undefined) throw new Error("Abundance column is required");
     const metrics = convertMetricsUiToArgs(data.metrics);
-    if (metrics.some((metric) => metric.type === undefined))
-      throw new Error("Each metric requires a type");
+    for (const metric of metrics) {
+      if (metric.type === undefined) throw new Error("Each metric requires a type");
+      assertDownsamplingComplete(metric.downsampling);
+    }
     return { abundanceRef: data.abundanceRef, metrics };
   })
 
@@ -98,4 +101,39 @@ export const platforma = BlockModelV3.create({ dataModel: blockDataModel, kind }
   .done();
 
 export type Platforma = typeof platforma;
+// The run gate for one metric's downsampling, mirroring exactly what
+// software/src/diversity/main.py reads: `top` and `cumtop` index `n`,
+// `hypergeometric` indexes `valueChooser` and then `n` when that is "fixed".
+// A key the analysis reads but the row never filled is a KeyError partway
+// through the run, so it is refused here, where the message reaches the user
+// while the row is still in front of them.
+//
+// This gate covers the template path too: init-params seed `data`, and `data`
+// goes through this lambda before any run. Which is why the check belongs here
+// and not in the kind's parser -- the parser validates the params envelope, and
+// making it stricter than the states the editor can reach would let the block
+// export a file its own kind refuses to apply.
+function assertDownsamplingComplete(downsampling: Metric["downsampling"]) {
+  switch (downsampling.type) {
+    case undefined:
+      throw new Error("Each metric requires a downsampling mode");
+    case "top":
+    case "cumtop":
+      if (downsampling.n === undefined) {
+        throw new Error(`Downsampling "${downsampling.type}" requires a value`);
+      }
+      return;
+    case "hypergeometric":
+      if (downsampling.valueChooser === undefined) {
+        throw new Error("Random sampling requires a value chooser");
+      }
+      if (downsampling.valueChooser === "fixed" && downsampling.n === undefined) {
+        throw new Error("Fixed random sampling requires a value");
+      }
+      return;
+    default:
+      return;
+  }
+}
+
 export type BlockOutputs = InferOutputsType<typeof platforma>;
