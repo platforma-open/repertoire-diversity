@@ -1,6 +1,7 @@
 import strings from "@milaboratories/strings";
 import type { InferOutputsType, PColumnIdAndSpec } from "@platforma-sdk/model";
 import { BlockModelV3, createPFrameForGraphs, createPlDataTableV2 } from "@platforma-sdk/model";
+import { kind } from "@platforma-open/milaboratories.repertoire-diversity-2.kind";
 import { convertMetricsUiToArgs } from "./converters";
 import { blockDataModel } from "./dataModel";
 import type { BlockArgs } from "./types";
@@ -11,7 +12,7 @@ export * from "./types";
 export { blockDataModel } from "./dataModel";
 export { getDefaultBlockLabel } from "./label";
 
-export const platforma = BlockModelV3.create(blockDataModel)
+export const platforma = BlockModelV3.create({ dataModel: blockDataModel, kind })
   .args<BlockArgs>((data) => {
     if (data.abundanceRef === undefined) throw new Error("Abundance column is required");
     const metrics = convertMetricsUiToArgs(data.metrics);
@@ -19,6 +20,18 @@ export const platforma = BlockModelV3.create(blockDataModel)
       throw new Error("Each metric requires a type");
     return { abundanceRef: data.abundanceRef, metrics };
   })
+
+  // Inverse of the kind's init-params contract: the input, the metric rows and
+  // the subtitle -- the fields a user sets by hand. Unlike `args` above the
+  // rows are projected as STORED (`MetricUI[]`, ids and disclosure included),
+  // not stripped to `Metric[]`: this is the user's configuration, not the run's.
+  // `defaultBlockLabel` is derived in ui/src/app.ts, and the table / graph
+  // states are view state; neither is configuration a template carries.
+  .templateParams((data) => ({
+    abundanceRef: data.abundanceRef,
+    metrics: data.metrics,
+    customBlockLabel: data.customBlockLabel,
+  }))
 
   .output("abundanceOptions", (ctx) =>
     ctx.resultPool.getOptions(

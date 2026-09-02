@@ -1,30 +1,9 @@
 import type { GraphMakerState } from "@milaboratories/graph-maker";
 import type { PlDataTableStateV2, PlRef } from "@platforma-sdk/model";
-
-export type DiversityType =
-  | "chao1"
-  | "d50"
-  | "efronThisted"
-  | "observed"
-  | "shannonWienerIndex"
-  | "shannonWiener"
-  | "normalizedShannonWiener"
-  | "inverseSimpson"
-  | "gini";
-
-export type Metric = {
-  type: DiversityType | undefined;
-  downsampling: {
-    type?: "none" | "top" | "cumtop" | "hypergeometric";
-    valueChooser?: "min" | "fixed" | "max" | "auto";
-    n?: number;
-  };
-};
-
-export type MetricUI = Metric & {
-  id: string;
-  isExpanded?: boolean;
-};
+// The metric vocabulary lives in the kind: its init-params contract names these
+// types and a kind cannot import from the model. Imported here for the shapes
+// below that are built from them.
+import type { Metric, MetricUI } from "@platforma-open/milaboratories.repertoire-diversity-2.kind";
 
 /**
  * Unified V3 data — the UI's persisted state. `metrics` is the editable list
