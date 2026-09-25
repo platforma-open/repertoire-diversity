@@ -1,5 +1,11 @@
 # @platforma-open/milaboratories.repertoire-diversity-2
 
+## 3.2.1
+
+### Patch Changes
+
+- bc10c9e: Update SDK: PlAgDataTable no longer recreates its grid in an endless loop
+
 ## 3.2.0
 
 ### Minor Changes
