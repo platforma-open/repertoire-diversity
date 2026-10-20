@@ -1,5 +1,13 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 2.1.2
+
+### Patch Changes
+
+- d4123a5: Release every package through npm trusted publishing (OIDC) so each package's trusted publisher is used before it expires.
+- Updated dependencies [d4123a5]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@2.2.1
+
 ## 2.1.1
 
 ### Patch Changes
