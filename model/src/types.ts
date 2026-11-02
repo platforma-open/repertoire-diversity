@@ -12,6 +12,8 @@ import type { Metric, MetricUI } from "@platforma-open/milaboratories.repertoire
  */
 export type BlockData = {
   abundanceRef?: PlRef;
+  /** Subset column picked with the abundance in PlDatasetSelector (e.g. a Repertoire Labeling label). */
+  filterRef?: PlRef;
   metrics: MetricUI[];
   defaultBlockLabel: string;
   customBlockLabel: string;
@@ -26,6 +28,8 @@ export type BlockData = {
  */
 export type BlockArgs = {
   abundanceRef: PlRef;
+  /** Canonical id of the subset column; set only when a filter is picked. */
+  inputFilter?: string;
   metrics: Metric[];
 };
 

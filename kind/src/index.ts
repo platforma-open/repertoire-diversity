@@ -9,8 +9,8 @@ export type { DiversityType, Metric, MetricUI } from "./types";
 export { DIVERSITY_TYPES, DOWNSAMPLING_TYPES, VALUE_CHOOSERS } from "./types";
 
 /**
- * This block's init-params contract — the abundance column to measure and the
- * metric rows to measure it with, plus the subtitle the user types.
+ * This block's init-params contract — the abundance column to measure (and an
+ * optional subset of it) and the metric rows to measure it with, plus the subtitle the user types.
  *
  * Left out: `defaultBlockLabel`, which `ui/src/app.ts` derives via
  * `getDefaultBlockLabel`, and the table / graph view state.
@@ -22,6 +22,8 @@ export { DIVERSITY_TYPES, DOWNSAMPLING_TYPES, VALUE_CHOOSERS } from "./types";
  */
 export type BlockParams = {
   abundanceRef?: PlRef;
+  /** A subset column (`pl7.app/isSubset`) the abundance is restricted to before the analysis. */
+  filterRef?: PlRef;
   metrics?: MetricUI[];
   customBlockLabel?: string;
 };
@@ -30,11 +32,16 @@ export type BlockParams = {
 function parseInitializationParams(value: unknown): BlockParams {
   assertParamsObject(value);
 
-  const { abundanceRef, metrics, customBlockLabel } = value;
+  const { abundanceRef, filterRef, metrics, customBlockLabel } = value;
 
   if (abundanceRef !== undefined && !isPlRef(abundanceRef)) {
     throw new Error(
       "'abundanceRef' must be a reference to an upstream column, written as { block, name }.",
+    );
+  }
+  if (filterRef !== undefined && !isPlRef(filterRef)) {
+    throw new Error(
+      "'filterRef' must be a reference to an upstream column, written as { block, name }.",
     );
   }
   if (customBlockLabel !== undefined && typeof customBlockLabel !== "string") {
@@ -42,7 +49,7 @@ function parseInitializationParams(value: unknown): BlockParams {
   }
   if (metrics !== undefined) assertMetrics(metrics);
 
-  return { abundanceRef, metrics, customBlockLabel };
+  return { abundanceRef, filterRef, metrics, customBlockLabel };
 }
 
 /**

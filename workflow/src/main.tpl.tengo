@@ -56,7 +56,7 @@ getDownsamplingLabel := func(downsampling) {
 	return base + ")"
 }
 
-getSpecs := func(abundanceSpec, metrics) {
+getSpecs := func(abundanceSpec, metrics, subset) {
 	columns := []
 
 	for index, metric in metrics {
@@ -78,6 +78,10 @@ getSpecs := func(abundanceSpec, metrics) {
 					}
 				}
 		}
+		// A subset run says so: its values describe the subset only
+		if !is_undefined(subset) {
+			spec.spec.domain["pl7.app/inputSubset"] = subset
+		}
 		columns = append(columns, spec)
 	}
 
@@ -97,6 +101,10 @@ getSpecs := func(abundanceSpec, metrics) {
 wf.prepare(func(args) {
 	bundleBuilder := wf.createPBundleBuilder()
 	bundleBuilder.addAnchor("main", args.abundanceRef)
+	// Optional subset column picked alongside the abundance (PlDatasetSelector)
+	if !is_undefined(args.inputFilter) {
+		bundleBuilder.addRef(json.decode(args.inputFilter))
+	}
 	return  { 
 		columns: bundleBuilder.build()
 	}
@@ -107,10 +115,33 @@ wf.body(func(args) {
 
 	columns := args.columns
 	abundanceSpec := columns.getSpec(args.abundanceRef)
-	table := pframes.tsvFileBuilder()
 
-	table.setAxisHeader("pl7.app/sampleId", "sampleId")
-	table.add(columns.getColumn(args.abundanceRef), {header: "count"})
+	// Optional subset: only its elements enter the metrics. The trace roots in the filter
+	// so downstream labels name it.
+	filterColumn := undefined
+	traceSpec := abundanceSpec
+	if !is_undefined(args.inputFilter) {
+		f := columns.getColumn(json.decode(args.inputFilter))
+		filterColumn = { spec: f.spec, data: f.data }
+		traceSpec = f.spec
+	}
+
+	table := undefined
+	if is_undefined(filterColumn) {
+		table = pframes.tsvFileBuilder()
+		table.setAxisHeader("pl7.app/sampleId", "sampleId")
+		table.add(columns.getColumn(args.abundanceRef), {header: "count"})
+	} else {
+		table = pframes.tableBuilder("tsv")
+		table.addPrimary("main", {
+			__isPrimaryRef: "v1",
+			column: columns.getColumn(args.abundanceRef),
+			filter: filterColumn
+		}, {header: "count"})
+		// The table builder heads axes by their label, which an element axis may lack
+		table.setAxisHeader("pl7.app/sampleId", "sampleId")
+		table.setAxisHeader(abundanceSpec.axesSpec[1].name, "elementId")
+	}
 	table.mem("16GiB")
 	table.cpu(1)
 	tsv := table.build()
@@ -127,7 +158,7 @@ wf.body(func(args) {
 	result := xsv.importFile(
 		runDiversity.getFile("result.tsv"),
 		"tsv",
-		getSpecs(abundanceSpec, args.metrics),
+		getSpecs(abundanceSpec, args.metrics, args.inputFilter),
 		{ splitDataAndSpec: true, cpu: 1, mem: "32GiB" }
 	)
 
@@ -137,7 +168,7 @@ wf.body(func(args) {
 			downsampling := json.decode(v.spec.domain["pl7.app/downsampling"])
 			
 			trace := pSpec.makeTrace(
-				abundanceSpec,
+				traceSpec,
 				{
 					type: "milaboratories.differential-repertoire-diversity",
 					id: blockId,
