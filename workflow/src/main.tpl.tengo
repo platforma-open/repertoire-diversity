@@ -132,7 +132,7 @@ wf.body(func(args) {
 		table.setAxisHeader("pl7.app/sampleId", "sampleId")
 		table.add(columns.getColumn(args.abundanceRef), {header: "count"})
 	} else {
-		table = pframes.tableBuilder("tsv")
+		table = pframes.tableBuilder("tsv").setColumnJoin("left")
 		table.addPrimary("main", {
 			__isPrimaryRef: "v1",
 			column: columns.getColumn(args.abundanceRef),
