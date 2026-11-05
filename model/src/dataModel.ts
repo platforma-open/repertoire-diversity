@@ -65,6 +65,7 @@ export const blockDataModel = new DataModelBuilder({ kind })
   }))
   .init(({ params }) => ({
     abundanceRef: params?.abundanceRef,
+    filterRef: params?.filterRef,
     // A template may seed the metric rows; otherwise the block starts on the
     // default set rather than an empty editor.
     metrics: params?.metrics ?? defaultMetrics(),

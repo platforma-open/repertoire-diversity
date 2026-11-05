@@ -1,24 +1,37 @@
 <script setup lang="ts">
 import strings from "@milaboratories/strings";
-import type { PlRef } from "@platforma-sdk/model";
-import { getRawPlatformaInstance } from "@platforma-sdk/model";
+import type { DatasetSelection } from "@platforma-sdk/model";
+import {
+  createDatasetSelection,
+  createPrimaryRef,
+  getRawPlatformaInstance,
+} from "@platforma-sdk/model";
 import {
   PlBtnSecondary,
-  PlDropdownRef,
+  PlDatasetSelector,
   PlElementList,
   PlSlideModal,
   PlAlert,
 } from "@platforma-sdk/ui-vue";
 import { asyncComputed } from "@vueuse/core";
+import { computed } from "vue";
 import { useApp } from "../app";
 import DiversityCard from "./DiversityCard.vue";
 import { getMetricLabel } from "./util";
 
 const app = useApp();
 
-function setAbundanceRef(abundanceRef?: PlRef) {
-  app.model.data.abundanceRef = abundanceRef;
-}
+const abundanceSelection = computed<DatasetSelection | undefined>({
+  get: () => {
+    const { abundanceRef, filterRef } = app.model.data;
+    if (abundanceRef === undefined) return undefined;
+    return createDatasetSelection(createPrimaryRef(abundanceRef, filterRef));
+  },
+  set: (selection) => {
+    app.model.data.abundanceRef = selection?.primary.column;
+    app.model.data.filterRef = selection?.primary.filter;
+  },
+});
 
 const settingsAreShown = defineModel<boolean>({ required: true });
 
@@ -50,12 +63,11 @@ const isEmpty = asyncComputed(async () => {
 <template>
   <PlSlideModal v-model="settingsAreShown">
     <template #title>{{ strings.titles.settings }}</template>
-    <PlDropdownRef
-      v-model="app.model.data.abundanceRef"
-      :options="app.model.outputs.abundanceOptions ?? []"
+    <PlDatasetSelector
+      v-model="abundanceSelection"
+      :options="app.model.outputs.abundanceOptions"
       label="Abundance"
       required
-      @update:model-value="setAbundanceRef"
     />
 
     <PlAlert v-if="isEmpty === true" type="warn" :style="{ width: '320px' }">

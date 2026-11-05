@@ -12,12 +12,12 @@ const downsamplingOptions: ListOption<string | undefined>[] = [
 ];
 
 const props = defineModel<Metric>({
-  default: {
+  default: () => ({
     type: undefined,
     downsampling: {
       type: "none",
     },
-  },
+  }),
 });
 </script>
 

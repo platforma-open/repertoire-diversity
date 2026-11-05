@@ -27,11 +27,15 @@ type AppModel = ReturnType<typeof useApp>["model"];
 
 function syncDefaultBlockLabel(model: AppModel) {
   watchEffect(() => {
-    const abundanceLabel = model.data.abundanceRef
-      ? model.outputs.abundanceOptions?.find((option) =>
-          plRefsEqual(option.ref, model.data.abundanceRef!),
-        )?.label
+    // The subset's label already carries the abundance as a prefix.
+    const { abundanceRef, filterRef } = model.data;
+    const option = abundanceRef
+      ? model.outputs.abundanceOptions?.find((o) => plRefsEqual(o.primary.ref, abundanceRef, true))
       : undefined;
+    const filter = filterRef
+      ? option?.filters?.find((f) => plRefsEqual(f.ref, filterRef, true))
+      : undefined;
+    const abundanceLabel = (filter ?? option?.primary)?.label;
 
     model.data.defaultBlockLabel = getDefaultBlockLabel({
       abundanceLabel,
