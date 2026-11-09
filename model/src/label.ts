@@ -1,8 +1,7 @@
-export function getDefaultBlockLabel(data: { abundanceLabel?: string }) {
-  // Return abundance label if available, otherwise default message
-  if (data.abundanceLabel) {
-    return data.abundanceLabel;
-  }
+import type { BlockData } from "./types";
 
-  return "Select Abundance and Metrics";
+/** Subtitle shown when the user has not set a custom block label. */
+export function defaultSubtitle(data: Pick<BlockData, "abundanceRef" | "subtitleLabel">): string {
+  if (data.abundanceRef === undefined) return "Select Abundance and Metrics";
+  return data.subtitleLabel ?? "";
 }

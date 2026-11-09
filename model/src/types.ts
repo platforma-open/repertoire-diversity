@@ -15,10 +15,19 @@ export type BlockData = {
   /** Subset column picked with the abundance in PlDatasetSelector (e.g. a Repertoire Labeling label). */
   filterRef?: PlRef;
   metrics: MetricUI[];
-  defaultBlockLabel: string;
   customBlockLabel: string;
+  /**
+   * The abundance's (or subset's) label as the result pool shows it. Written by the abundance
+   * picker on a user pick; feeds the subtitle only, never the workflow.
+   */
+  subtitleLabel?: string;
   tableState: PlDataTableStateV2;
   graphState: GraphMakerState;
+};
+
+/** Data as stored before `subtitleLabel` replaced the UI-computed `defaultBlockLabel`. */
+export type BlockDataV1 = Omit<BlockData, "subtitleLabel"> & {
+  defaultBlockLabel: string;
 };
 
 /**

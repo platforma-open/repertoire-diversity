@@ -12,8 +12,8 @@ export { DIVERSITY_TYPES, DOWNSAMPLING_TYPES, VALUE_CHOOSERS } from "./types";
  * This block's init-params contract — the abundance column to measure (and an
  * optional subset of it) and the metric rows to measure it with, plus the subtitle the user types.
  *
- * Left out: `defaultBlockLabel`, which `ui/src/app.ts` derives via
- * `getDefaultBlockLabel`, and the table / graph view state.
+ * Left out: `subtitleLabel`, the abundance's label as the result pool shows it,
+ * written by the abundance picker, and the table / graph view state.
  *
  * Every field is optional because the projection hands live state back
  * untouched, and a block whose input is not picked yet holds `undefined`

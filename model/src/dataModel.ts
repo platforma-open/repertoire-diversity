@@ -1,9 +1,8 @@
 import type { GraphMakerState } from "@milaboratories/graph-maker";
 import { kind } from "@platforma-open/milaboratories.repertoire-diversity-2.kind";
 import { createPlDataTableStateV2, DataModelBuilder } from "@platforma-sdk/model";
-import { getDefaultBlockLabel } from "./label";
 import type { MetricUI } from "@platforma-open/milaboratories.repertoire-diversity-2.kind";
-import type { BlockData, LegacyBlockArgs, LegacyUiState } from "./types";
+import type { BlockData, BlockDataV1, LegacyBlockArgs, LegacyUiState } from "./types";
 
 const defaultGraphState = (): GraphMakerState => ({
   title: "Sequence Diversity",
@@ -45,7 +44,7 @@ const defaultMetrics = (): MetricUI[] => [
 ];
 
 export const blockDataModel = new DataModelBuilder({ kind })
-  .from<BlockData>("v1")
+  .from<BlockDataV1>("v1")
   // V1 split refData + metrics + block labels across `args`, with the editable
   // MetricUI[] and view state under `uiState`. Fold both into unified `data`.
   .upgradeLegacy<LegacyBlockArgs, LegacyUiState>(({ args, uiState }) => ({
@@ -58,10 +57,16 @@ export const blockDataModel = new DataModelBuilder({ kind })
       (args?.metrics?.length
         ? args.metrics.map((metric, i) => ({ ...metric, id: `metric-${i}`, isExpanded: false }))
         : defaultMetrics()),
-    defaultBlockLabel: args?.defaultBlockLabel ?? getDefaultBlockLabel({}),
+    defaultBlockLabel: args?.defaultBlockLabel ?? "",
     customBlockLabel: args?.customBlockLabel ?? "",
     tableState: uiState?.tableState ?? createPlDataTableStateV2(),
     graphState: uiState?.graphState ?? defaultGraphState(),
+  }))
+  // The old label was the abundance's (or subset's) result-pool label alone, or a fixed hint
+  // when none was resolved; the label carries over, the hint is recomputed from data.
+  .migrate<BlockData>("v2", ({ defaultBlockLabel, ...rest }) => ({
+    ...rest,
+    subtitleLabel: defaultBlockLabel === "Select Abundance and Metrics" ? "" : defaultBlockLabel,
   }))
   .init(({ params }) => ({
     abundanceRef: params?.abundanceRef,
@@ -69,8 +74,10 @@ export const blockDataModel = new DataModelBuilder({ kind })
     // A template may seed the metric rows; otherwise the block starts on the
     // default set rather than an empty editor.
     metrics: params?.metrics ?? defaultMetrics(),
-    defaultBlockLabel: getDefaultBlockLabel({}),
     customBlockLabel: params?.customBlockLabel ?? "",
+    // The abundance's label comes from the result pool, which `init` cannot reach; it is
+    // written when the user picks an abundance.
+    subtitleLabel: "",
     tableState: createPlDataTableStateV2(),
     graphState: defaultGraphState(),
   }));

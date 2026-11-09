@@ -1,17 +1,10 @@
-import {
-  getDefaultBlockLabel,
-  platforma,
-} from "@platforma-open/milaboratories.repertoire-diversity-2.model";
-import { plRefsEqual } from "@platforma-sdk/model";
+import { platforma } from "@platforma-open/milaboratories.repertoire-diversity-2.model";
 import { defineAppV3 } from "@platforma-sdk/ui-vue";
-import { watchEffect } from "vue";
 import DiversityGraph from "./pages/DiversityGraph.vue";
 import MainPage from "./pages/MainPage.vue";
 
 export const sdkPlugin = defineAppV3(platforma, (app) => {
   app.model.data.customBlockLabel ??= "";
-
-  syncDefaultBlockLabel(app.model);
 
   return {
     routes: {
@@ -22,23 +15,3 @@ export const sdkPlugin = defineAppV3(platforma, (app) => {
 });
 
 export const useApp = sdkPlugin.useApp;
-
-type AppModel = ReturnType<typeof useApp>["model"];
-
-function syncDefaultBlockLabel(model: AppModel) {
-  watchEffect(() => {
-    // The subset's label already carries the abundance as a prefix.
-    const { abundanceRef, filterRef } = model.data;
-    const option = abundanceRef
-      ? model.outputs.abundanceOptions?.find((o) => plRefsEqual(o.primary.ref, abundanceRef, true))
-      : undefined;
-    const filter = filterRef
-      ? option?.filters?.find((f) => plRefsEqual(f.ref, filterRef, true))
-      : undefined;
-    const abundanceLabel = (filter ?? option?.primary)?.label;
-
-    model.data.defaultBlockLabel = getDefaultBlockLabel({
-      abundanceLabel,
-    });
-  });
-}
