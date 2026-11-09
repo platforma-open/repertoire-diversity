@@ -1,5 +1,17 @@
 # @platforma-open/milaboratories.repertoire-diversity-2.ui
 
+## 2.2.1
+
+### Patch Changes
+
+- ec58961: Compute the block subtitle's hint in the model
+
+  The subtitle shows the abundance's (or subset's) label, kept in sync with the result
+  pool and written only when it changes. Existing blocks keep their subtitle.
+
+- Updated dependencies [ec58961]
+  - @platforma-open/milaboratories.repertoire-diversity-2.model@2.3.1
+
 ## 2.2.0
 
 ### Minor Changes
