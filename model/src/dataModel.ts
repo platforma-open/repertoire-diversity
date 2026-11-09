@@ -75,8 +75,8 @@ export const blockDataModel = new DataModelBuilder({ kind })
     // default set rather than an empty editor.
     metrics: params?.metrics ?? defaultMetrics(),
     customBlockLabel: params?.customBlockLabel ?? "",
-    // The abundance's label comes from the result pool, which `init` cannot reach; it is
-    // written when the user picks an abundance.
+    // The abundance's label comes from the result pool, which `init` cannot reach; the UI
+    // keeps it in sync.
     subtitleLabel: "",
     tableState: createPlDataTableStateV2(),
     graphState: defaultGraphState(),

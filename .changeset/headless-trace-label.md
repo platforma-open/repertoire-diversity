@@ -5,6 +5,5 @@
 
 Compute the block subtitle without opening the block
 
-The subtitle shows the abundance's (or subset's) label, written when the user picks
-an abundance, so it no longer depends on opening the block. Existing blocks keep
-their subtitle.
+The subtitle shows the abundance's (or subset's) label, kept in sync with the result
+pool and written only when it changes. Existing blocks keep their subtitle.

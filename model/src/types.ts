@@ -17,8 +17,8 @@ export type BlockData = {
   metrics: MetricUI[];
   customBlockLabel: string;
   /**
-   * The abundance's (or subset's) label as the result pool shows it. Written by the abundance
-   * picker on a user pick; feeds the subtitle only, never the workflow.
+   * The abundance's (or subset's) label as the result pool shows it, kept in sync by the UI;
+   * feeds the subtitle only, never the workflow.
    */
   subtitleLabel?: string;
   tableState: PlDataTableStateV2;
