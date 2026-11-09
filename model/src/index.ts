@@ -18,13 +18,13 @@ import type { Metric } from "@platforma-open/milaboratories.repertoire-diversity
 import { kind } from "@platforma-open/milaboratories.repertoire-diversity-2.kind";
 import { convertMetricsUiToArgs } from "./converters";
 import { blockDataModel } from "./dataModel";
+import { defaultSubtitle } from "./label";
 import type { BlockArgs } from "./types";
 
 export type * from "@milaboratories/helpers";
 export * from "./converters";
 export * from "./types";
 export { blockDataModel } from "./dataModel";
-export { getDefaultBlockLabel } from "./label";
 
 export const platforma = BlockModelV3.create({ dataModel: blockDataModel, kind })
   .args<BlockArgs>((data) => {
@@ -47,8 +47,9 @@ export const platforma = BlockModelV3.create({ dataModel: blockDataModel, kind }
   // the subtitle -- the fields a user sets by hand. Unlike `args` above the
   // rows are projected as STORED (`MetricUI[]`, ids and disclosure included),
   // not stripped to `Metric[]`: this is the user's configuration, not the run's.
-  // `defaultBlockLabel` is derived in ui/src/app.ts, and the table / graph
-  // states are view state; neither is configuration a template carries.
+  // `subtitleLabel` is the abundance's label as the source project's result
+  // pool shows it, and the table / graph states are view state; neither is
+  // configuration a template carries.
   .templateParams((data) => ({
     abundanceRef: data.abundanceRef,
     filterRef: data.filterRef,
@@ -128,7 +129,7 @@ export const platforma = BlockModelV3.create({ dataModel: blockDataModel, kind }
 
   .title(() => "Sequence Diversity")
 
-  .subtitle((ctx) => ctx.data.customBlockLabel || ctx.data.defaultBlockLabel)
+  .subtitle((ctx) => ctx.data.customBlockLabel || defaultSubtitle(ctx.data))
 
   .sections(() => [
     { type: "link" as const, href: "/" as const, label: strings.titles.main },
