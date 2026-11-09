@@ -5,7 +5,6 @@ import {
   createDatasetSelection,
   createPrimaryRef,
   getRawPlatformaInstance,
-  plRefsEqual,
 } from "@platforma-sdk/model";
 import {
   PlBtnSecondary,
@@ -31,22 +30,8 @@ const abundanceSelection = computed<DatasetSelection | undefined>({
   set: (selection) => {
     app.model.data.abundanceRef = selection?.primary.column;
     app.model.data.filterRef = selection?.primary.filter;
-    app.model.data.subtitleLabel = pickedAbundanceLabel();
   },
 });
-
-// The subset's label when one is picked: it already carries the abundance as a prefix.
-function pickedAbundanceLabel(): string {
-  const { abundanceRef, filterRef } = app.model.data;
-  if (!abundanceRef) return "";
-  const option = app.model.outputs.abundanceOptions?.find((o) =>
-    plRefsEqual(o.primary.ref, abundanceRef, true),
-  );
-  const filter = filterRef
-    ? option?.filters?.find((f) => plRefsEqual(f.ref, filterRef, true))
-    : undefined;
-  return (filter ?? option?.primary)?.label ?? "";
-}
 
 const settingsAreShown = defineModel<boolean>({ required: true });
 
